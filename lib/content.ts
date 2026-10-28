@@ -11,9 +11,9 @@ import type { PortfolioContent } from "@/types/portfolio";
  *               username to fetch live repositories from the GitHub API.
  */
 export const portfolio: PortfolioContent = {
-  name: "Your Name",
+  name: "Dixit Dahiya",
   role: "Creative Developer",
-  initials: "YN",
+  initials: "DD",
   tagline:
     "I design and build fast, tactile interfaces — where motion is a material, not decoration.",
   email: "hello@yourname.dev",

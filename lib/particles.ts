@@ -80,7 +80,7 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
     return { replay: () => {}, refresh: () => {}, destroy: () => {} };
   }
 
-  const initials = String(options.initials || "YN").slice(0, 2).toUpperCase();
+  const initials = String(options.initials || "DD").slice(0, 2).toUpperCase();
 
   const reduceQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   let reduced = reduceQuery.matches;

@@ -264,9 +264,9 @@ Everything content-related lives in [`lib/content.ts`](./lib/content.ts) — edi
 
 ```ts
 export const portfolio = {
-  name: "Your Name",        // Hero headline, nav title, footer
+  name: "Dixit Dahiya",     // Hero headline, nav title, footer
   role: "Creative Developer",
-  initials: "YN",           // Particle monogram & fallback avatar
+  initials: "DD",           // Particle monogram & fallback avatar
   portrait: "",             // Path to image in public/, e.g. "/portrait.png"
   email: "hello@yourname.dev",
   location: "Remote — Worldwide",
