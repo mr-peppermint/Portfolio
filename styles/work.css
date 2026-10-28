@@ -1,0 +1,232 @@
+/* ------------------------------ work ------------------------------ */
+
+.section--work {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 55%);
+  border-block: 1px solid var(--line-soft);
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 22px);
+}
+
+.project {
+  position: relative;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.008));
+  overflow: hidden;
+  transition: transform 0.55s var(--ease), border-color 0.45s,
+    box-shadow 0.55s var(--ease);
+}
+
+.project::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    480px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.08),
+    transparent 45%
+  );
+  transition: opacity 0.4s;
+}
+
+.project:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 32px 70px rgba(0, 0, 0, 0.38);
+}
+
+.project:hover::after {
+  opacity: 1;
+}
+
+.project.is-hidden {
+  display: none;
+}
+
+.project-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.project-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(190px, 22vw, 280px);
+  overflow: hidden;
+  border-bottom: 1px solid var(--line-soft);
+  background-color: #0b0c0d;
+  background-image:
+    radial-gradient(120% 100% at 30% 0%, rgba(255, 255, 255, 0.07), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 42px);
+  transition: background-color 0.5s;
+}
+
+.project:nth-child(3n + 2) .project-visual {
+  background-image:
+    radial-gradient(100% 120% at 70% 100%, rgba(255, 255, 255, 0.08), transparent 62%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 42px);
+}
+
+.project:nth-child(3n) .project-visual {
+  background-image:
+    radial-gradient(90% 90% at 50% 50%, rgba(255, 255, 255, 0.075), transparent 65%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 26px);
+}
+
+.project:hover .project-visual {
+  background-color: #0e0f10;
+}
+
+.project-num {
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--dim);
+}
+
+.project-glyph {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(4.5rem, 9vw, 8.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.38);
+  transition: transform 0.7s var(--ease), -webkit-text-stroke-color 0.5s,
+    color 0.5s;
+}
+
+.project:hover .project-glyph {
+  transform: scale(1.05) rotate(-2deg);
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.035);
+}
+
+.project-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.24);
+  border-width: 0;
+}
+
+.project-corner--tl {
+  top: 14px;
+  right: 16px;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.project-corner--br {
+  bottom: 14px;
+  left: 16px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.project-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: clamp(18px, 2.2vw, 26px);
+}
+
+.project-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.project-head h3 {
+  font-size: clamp(1.25rem, 1.8vw, 1.55rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.project-arrow {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border: 1px solid var(--line-soft);
+  border-radius: 50%;
+  font-size: 13px;
+  color: var(--muted);
+  transition: background-color 0.4s, color 0.4s, border-color 0.4s,
+    transform 0.5s var(--ease);
+}
+
+.project:hover .project-arrow {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--ink);
+  transform: rotate(45deg);
+}
+
+.project-desc {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 18px;
+}
+
+.project-tags li {
+  padding: 0.28rem 0.55rem;
+  border: 1px solid var(--line-soft);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  transition: border-color 0.35s, color 0.35s;
+}
+
+.project:hover .project-tags li {
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+.project-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 18px;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+}
+
+.work-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: clamp(28px, 4vw, 44px);
+}

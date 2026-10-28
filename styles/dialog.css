@@ -1,0 +1,125 @@
+/* ------------------------------ dialog ------------------------------ */
+
+.cert-dialog {
+  width: min(92vw, 560px);
+  max-height: 88svh;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 20px;
+  background: #0c0d0e;
+  color: var(--text);
+  box-shadow: 0 50px 140px rgba(0, 0, 0, 0.65);
+}
+
+.cert-dialog::backdrop {
+  background: rgba(3, 4, 4, 0.74);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.cert-dialog[open] {
+  animation: dialog-in 0.45s var(--ease);
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.dialog-inner {
+  position: relative;
+  padding: clamp(24px, 4vw, 38px);
+}
+
+.dialog-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line-soft);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.3s, background-color 0.3s, border-color 0.3s,
+    transform 0.35s var(--ease);
+}
+
+.dialog-close:hover {
+  color: var(--ink);
+  background: var(--text);
+  border-color: var(--text);
+  transform: rotate(90deg);
+}
+
+.dialog-title {
+  margin-top: 18px;
+  padding-right: 28px;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.dialog-issuer {
+  margin-top: 8px;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+}
+
+.dialog-desc {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.dialog-meta {
+  display: grid;
+  gap: 11px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.dialog-meta > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.dialog-meta dt {
+  font-size: 8px;
+  letter-spacing: 0.13em;
+  color: var(--dim);
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.dialog-meta dd {
+  text-align: right;
+  font-size: 0.82rem;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.dialog-actions {
+  margin-top: 26px;
+}
+
+.dialog-actions .btn {
+  width: 100%;
+}

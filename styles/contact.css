@@ -1,0 +1,133 @@
+/* ------------------------------ contact ------------------------------ */
+
+.section--contact {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(100px, 14vw, 180px);
+  border-top: 1px solid var(--line-soft);
+}
+
+.section--contact::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  width: min(90vw, 1000px);
+  height: min(90vw, 1000px);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05), transparent 62%);
+}
+
+.contact-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.contact-inner .section-index {
+  justify-content: center;
+}
+
+.contact-title {
+  margin-top: 22px;
+  font-size: clamp(2.8rem, 7vw, 6.2rem);
+  font-weight: 500;
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+}
+
+.contact-lede {
+  max-width: 55ch;
+  margin: 26px auto 0;
+  color: var(--muted);
+  font-size: clamp(0.95rem, 1.2vw, 1.08rem);
+  line-height: 1.65;
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 38px;
+}
+
+.contact-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--line);
+  font-size: clamp(1.15rem, 2.4vw, 1.9rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.email-arrow {
+  font-size: 0.75em;
+  color: var(--muted);
+  transition: transform 0.45s var(--ease), color 0.3s;
+}
+
+.contact-email:hover {
+  border-color: var(--text);
+}
+
+.contact-email:hover .email-arrow {
+  color: var(--text);
+  transform: translate(5px, -5px);
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 40px;
+}
+
+.socials a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.3s, background-color 0.35s, border-color 0.35s,
+    transform 0.35s var(--ease);
+}
+
+.socials a:hover {
+  color: var(--ink);
+  background: var(--text);
+  border-color: var(--text);
+  transform: translateY(-2px);
+}
+
+.social-short {
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 7px;
+  opacity: 0.7;
+}
+
+.social-arrow {
+  transition: transform 0.35s var(--ease);
+}
+
+.socials a:hover .social-arrow {
+  transform: translate(2px, -2px);
+}

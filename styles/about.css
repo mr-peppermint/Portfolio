@@ -1,0 +1,114 @@
+/* ------------------------------ about ------------------------------ */
+
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+  gap: clamp(36px, 7vw, 96px);
+  align-items: start;
+}
+
+.about-copy {
+  max-width: 60ch;
+}
+
+.about-lead {
+  font-size: clamp(1.3rem, 2.05vw, 1.75rem);
+  line-height: 1.35;
+  letter-spacing: -0.025em;
+  color: var(--text);
+}
+
+.about-lead strong {
+  font-weight: 500;
+  color: var(--white);
+}
+
+.about-copy p + p {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.about-copy .link-arrow {
+  margin-top: 30px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--line-soft);
+}
+
+.stat {
+  padding-block: 20px 18px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.stat:nth-child(odd) {
+  padding-right: 18px;
+}
+
+.stat:nth-child(even) {
+  padding-left: 22px;
+  border-left: 1px solid var(--line-soft);
+}
+
+.stat-number {
+  display: flex;
+  align-items: baseline;
+  font-size: clamp(2rem, 3vw, 2.7rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.stat-suffix {
+  color: var(--muted);
+  font-size: 0.55em;
+  margin-left: 2px;
+}
+
+.stat-label {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.skills {
+  margin-top: 32px;
+}
+
+.mini-title {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+  margin-bottom: 12px;
+}
+
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.skill-list li {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--muted);
+  transition: color 0.3s, border-color 0.3s, transform 0.35s var(--ease),
+    background-color 0.3s;
+}
+
+.skill-list li:hover {
+  color: var(--text);
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.035);
+  transform: translateY(-2px);
+}

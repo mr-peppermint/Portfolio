@@ -1,0 +1,116 @@
+/* ------------------------------ type ------------------------------ */
+
+.eyebrow,
+.section-index,
+.mini-title,
+.project-meta,
+.cert-issuer,
+.cert-foot,
+.gh-stat-label,
+.gh-handle,
+.badge,
+.heatmap-legend,
+.repo-meta,
+.repo-topics span,
+.footer-meta,
+.hero-role,
+.hero-socials,
+.cert-top,
+.cert-bottom,
+.replay,
+.scroll-cue,
+.activity-head,
+.dialog-issuer,
+.dialog-meta dt {
+  font-family: var(--mono);
+  text-transform: uppercase;
+}
+
+.section {
+  position: relative;
+  padding-block: clamp(88px, 11vw, 150px);
+  scroll-margin-top: 84px;
+}
+
+.section-index {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+}
+
+.section-index::before {
+  content: "";
+  width: 26px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.section-head {
+  margin-bottom: clamp(40px, 6vw, 72px);
+}
+
+.section-head--split {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(24px, 5vw, 80px);
+}
+
+.section-title {
+  margin-top: 20px;
+  font-size: clamp(2.2rem, 4.8vw, 4.3rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.section-title em,
+.contact-title em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.section-aside {
+  max-width: 340px;
+  font-size: 0.93rem;
+  line-height: 1.65;
+  color: var(--muted);
+  padding-bottom: 6px;
+}
+
+.muted-note {
+  color: var(--dim);
+  font-size: 0.88rem;
+}
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--line);
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.link-arrow span:last-child {
+  transition: transform 0.4s var(--ease);
+}
+
+.link-arrow:hover {
+  color: var(--white);
+  border-color: var(--white);
+}
+
+.link-arrow:hover span:last-child {
+  transform: translate(4px, -4px);
+}

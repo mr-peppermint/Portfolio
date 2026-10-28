@@ -1,0 +1,43 @@
+/* ==================================================================
+   MOTION PREFERENCES
+   ================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero-name .char {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .hero.is-formed .replay {
+    opacity: 1;
+    transform: none;
+  }
+
+  .cursor {
+    display: none;
+  }
+
+  .hero-orb {
+    animation: none;
+  }
+}
