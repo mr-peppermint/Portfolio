@@ -201,14 +201,15 @@
 }
 
 /*
- * "D" of "Dixit" — transparent fill with white outline.
+ * "Dixit" (first 5 chars) — transparent fill with white outline.
  * DecryptedText renders: h1 > span[aria-label] > span[aria-hidden] > span.decrypted-*
- * The very first character span is the "D".
+ * Children 1-5 are D, i, x, i, t; child 6 is the space gap span.
  */
 @supports (-webkit-text-stroke: 1px #fff) {
-  .hero-name > span > span[aria-hidden="true"] > span:first-child {
+  .hero-name > span > span[aria-hidden="true"] > span:nth-child(-n+5) {
     color: transparent !important;
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.55);
+    filter: none !important;
   }
 }
 
