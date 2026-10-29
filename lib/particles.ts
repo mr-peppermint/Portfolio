@@ -183,9 +183,11 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
     const pad = Math.min(w, h) * 0.055;
     const maxW = w - pad * 2;
     const maxH = h - pad * 2;
-    const scale = Math.min(maxW / img.width, maxH / img.height);
-    const dw = img.width * scale;
-    const dh = img.height * scale;
+    const iw = img.naturalWidth || img.width || 1;
+    const ih = img.naturalHeight || img.height || 1;
+    const scale = Math.min(maxW / iw, maxH / ih);
+    const dw = iw * scale;
+    const dh = ih * scale;
 
     c.clearRect(0, 0, w, h);
     c.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
@@ -241,8 +243,9 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
     const threshold = 18;
 
     const points: TargetPoint[] = [];
-    for (let yy = 0; yy < off.height; yy += gap) {
-      for (let xx = 0; xx < off.width; xx += gap) {
+    const step = isPortrait ? 3 : gap;
+    for (let yy = 0; yy < off.height; yy += step) {
+      for (let xx = 0; xx < off.width; xx += step) {
         const i = (yy * off.width + xx) * 4;
         const a = data[i + 3];
         if (!a || a < 35) continue;
@@ -262,16 +265,13 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
 
         let color: string;
         if (isPortrait) {
-          // If dark pixel in artwork, ensure it is visible as a subtle slate tone against dark bg
-          if (r < 25 && g < 25 && b < 25) {
-            color = "rgba(70,75,85,0.85)";
+          if (lum < 40) {
+            color = "rgb(150, 160, 178)";
           } else {
-            // Quantize RGB in steps of 16 to keep ~50-80 color groups for high-fps batch rendering
-            const qr = Math.min(255, Math.round(r / 16) * 16);
-            const qg = Math.min(255, Math.round(g / 16) * 16);
-            const qb = Math.min(255, Math.round(b / 16) * 16);
-            const alpha = Math.min(1, Math.max(0.72, a / 255));
-            color = `rgba(${qr},${qg},${qb},${alpha.toFixed(2)})`;
+            const qr = Math.min(255, Math.round(r / 28) * 28);
+            const qg = Math.min(255, Math.round(g / 28) * 28);
+            const qb = Math.min(255, Math.round(b / 28) * 28);
+            color = `rgb(${qr},${qg},${qb})`;
           }
         } else {
           color = COLORS[bucketFor(shade)];
@@ -333,8 +333,8 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
   /* ------------------------------------------------------------------ */
 
   function particleCount(points: number): number {
-    const max = W < 700 ? 4200 : 8000;
-    const min = W < 700 ? 1200 : 2200;
+    const max = W < 700 ? 3200 : 5500;
+    const min = W < 700 ? 1000 : 1800;
     const target = Math.round(points * 1.15);
     return Math.max(min, Math.min(max, target));
   }
@@ -486,7 +486,7 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
   }
 
   function paint(time: number): void {
-    if (isColorMode) {
+    if (isColorMode && colorGroups.size > 0) {
       ctx!.globalCompositeOperation = "source-over";
       for (const [color, group] of colorGroups) {
         if (!group.length) continue;
@@ -729,26 +729,30 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
 
     if (options.portrait) {
       const img = new Image();
-      img.decoding = "async";
-      img.crossOrigin = "anonymous";
       let booted = false;
-      const finish = () => {
+      const finish = (loaded: boolean) => {
         if (booted || destroyed) return;
         booted = true;
+        if (!loaded) portrait = null;
         init();
       };
       img.onload = () => {
         portrait = img;
-        finish();
+        finish(true);
       };
       img.onerror = () => {
-        finish();
+        finish(false);
       };
-      window.setTimeout(finish, 2500);
+      window.setTimeout(() => finish(false), 2000);
       const src = options.portrait.startsWith("/") || options.portrait.startsWith("http")
         ? options.portrait
         : `/${options.portrait}`;
       img.src = src;
+
+      if (img.complete && (img.naturalWidth || img.width)) {
+        portrait = img;
+        finish(true);
+      }
     } else {
       init();
     }

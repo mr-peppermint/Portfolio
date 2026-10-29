@@ -1,34 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import type { ParticlePortraitHandle } from "@/lib/particles";
 import { portfolio } from "@/lib/content";
 import ParticleStage from "@/components/ParticleStage";
+import DecryptedText from "@/components/DecryptedText";
 import Socials from "@/components/Socials";
-
-interface WordChar {
-  ch: string;
-  d: number;
-  key: string;
-}
-
-function splitName(name: string): { words: WordChar[][]; longest: number } {
-  const words = name.trim().split(/\s+/);
-  const longest = words.reduce((max, w) => Math.max(max, w.length), 0);
-  return {
-    longest,
-    words: words.map((word, wi) =>
-      Array.from(word).map((ch, ci) => ({
-        ch,
-        d: 180 + (wi * 2 + ci) * 46,
-        key: `${wi}-${ci}`,
-      }))
-    ),
-  };
-}
 
 export default function Hero() {
   const [formed, setFormed] = useState(false);
+  const [decryptKey, setDecryptKey] = useState(0); // bumped to re-trigger animation on replay
   const engineRef = useRef<ParticlePortraitHandle>(null);
 
   useEffect(() => {
@@ -38,6 +19,7 @@ export default function Hero() {
 
   const replay = () => {
     setFormed(false);
+    setDecryptKey((k) => k + 1);
     engineRef.current?.replay();
   };
 
@@ -47,7 +29,10 @@ export default function Hero() {
 
   const onFormed = useCallback(() => setFormed(true), []);
 
-  const { words, longest } = splitName(portfolio.name);
+  const longest = portfolio.name
+    .trim()
+    .split(/\s+/)
+    .reduce((max, w) => Math.max(max, w.length), 0);
   const nameClass =
     longest > 9 ? "hero-name--long" : longest > 6 ? "hero-name--mid" : undefined;
 
@@ -57,17 +42,25 @@ export default function Hero() {
 
       <div className="wrap hero-grid">
         <div className="hero-copy">
-          <h1 className={`hero-name${nameClass ? ` ${nameClass}` : ""}`} id="hero-name">
-            {words.map((word, wi) => (
-              <span className="word" key={wi}>
-                {word.map(({ ch, d, key }) => (
-                  <span key={key} className="char" aria-hidden="true" style={{ "--d": `${d}ms` } as React.CSSProperties}>
-                    {ch}
-                  </span>
-                ))}
-              </span>
-            ))}
-            <span className="sr-only">{portfolio.name}</span>
+          <h1
+            className={`hero-name${nameClass ? ` ${nameClass}` : ""}`}
+            id="hero-name"
+          >
+            <DecryptedText
+              key={decryptKey}
+              text={portfolio.name}
+              animateOn="view"
+              effect="scramble"
+              sequential
+              revealDirection="start"
+              speed={50}
+              maxIterations={10}
+              scrambleColor="rgba(255,255,255,0.82)"
+              useOriginalCharsOnly={false}
+              loop={false}
+              className="decrypted-revealed"
+              encryptedClassName="decrypted-encrypted"
+            />
           </h1>
 
           <p className="hero-role" data-reveal style={{ "--delay": "620ms" } as React.CSSProperties}>

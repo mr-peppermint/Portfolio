@@ -32,7 +32,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
   background:
     radial-gradient(
@@ -183,28 +183,32 @@
   font-size: clamp(1.45rem, 4vw, 4rem);
 }
 
-@supports (-webkit-text-stroke: 1px #fff) {
-  .hero-name .word:first-child,
-  .hero-name .word:first-child .char {
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
-  }
-}
+/* ── DecryptedText integration ─────────────────────────────────────── */
 
-.hero-name .char {
+/* Revealed (final) characters — inherit white from .hero-name */
+.decrypted-revealed {
   display: inline-block;
-  opacity: 0;
-  transform: translateY(0.9em) rotate(4deg);
-  filter: blur(7px);
-  animation: char-in 1.1s var(--ease) forwards;
-  animation-delay: var(--d, 0ms);
+  color: inherit;
+  transition: color 0.2s ease;
 }
 
-@keyframes char-in {
-  to {
-    opacity: 1;
-    transform: none;
-    filter: blur(0);
+/* Scrambling (encrypted) characters — white cipher glow */
+.decrypted-encrypted {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.82);
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.45));
+  transition: color 0.2s ease, filter 0.2s ease;
+}
+
+/*
+ * "D" of "Dixit" — transparent fill with white outline.
+ * DecryptedText renders: h1 > span[aria-label] > span[aria-hidden] > span.decrypted-*
+ * The very first character span is the "D".
+ */
+@supports (-webkit-text-stroke: 1px #fff) {
+  .hero-name > span > span[aria-hidden="true"] > span:first-child {
+    color: transparent !important;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.55);
   }
 }
 
