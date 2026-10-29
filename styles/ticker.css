@@ -47,21 +47,26 @@
 }
 
 .ticker-group span {
+  display: inline-flex;
+  align-items: center;
   font-family: var(--mono);
   font-size: 9px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--dim);
+  white-space: nowrap;
 }
 
 .ticker-group i {
   display: block;
+  flex-shrink: 0;
   width: 3px;
   height: 3px;
-  margin-inline: 28px;
+  margin-inline: 52px;
   border-radius: 50%;
   background: var(--text);
   opacity: 0.5;
+  align-self: center;
 }
 
 @keyframes marquee {

@@ -1,11 +1,12 @@
 const ITEMS = [
-  "Full-Stack Development",
-  "React & Next.js",
-  "Python & FastAPI",
-  "WebGL & Particles",
-  "Creative Coding",
-  "Linux & Wayland",
-  "High Performance",
+  "Full-Stack",
+  "React",
+  "Next.js",
+  "Python",
+  "WebGL",
+  "Vibe Coding",
+  "Linux",
+  "Optimize",
 ];
 
 export default function Ticker() {
