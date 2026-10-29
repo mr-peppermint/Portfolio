@@ -109,7 +109,7 @@ export default function Certificates() {
             </h2>
           </div>
           <p className="section-aside">
-            Certifications and programs I&apos;ve completed — the structured side of a mostly
+            Certifications and Programs I&apos;ve completed — the structured side of a mostly
             self-directed education. Select a card to view details.
           </p>
         </header>

@@ -7,49 +7,13 @@ const milestones = [
     year: "2026",
     title: "TerraGuard",
     detail: "Built satellite forest-loss monitoring system using Google Earth Engine, FastAPI, and MapLibre.",
-    tag: "Project",
+    tag: "Prototype",
   },
   {
     year: "2026",
-    title: "Portfolio v1",
+    title: "Portfolio",
     detail: "Launched this portfolio with a WebGL particle portrait engine, live GitHub feed, and Codeforces integration.",
-    tag: "Project",
-  },
-  {
-    year: "2025",
-    title: "Machine Learning Specialization",
-    detail: "Completed DeepLearning.AI × Stanford 3-course ML Specialization — supervised learning, neural nets, and recommender systems.",
-    tag: "Certification",
-  },
-  {
-    year: "2024",
-    title: "Meta Front-End Developer",
-    detail: "Completed Meta's 9-course professional certificate covering React, UX, responsive design, and version control.",
-    tag: "Certification",
-  },
-  {
-    year: "2024",
-    title: "AWS Cloud Practitioner",
-    detail: "Earned foundational AWS certification covering cloud architecture, core services, security, and billing.",
-    tag: "Certification",
-  },
-  {
-    year: "2023",
-    title: "CS50x — Harvard",
-    detail: "Completed Harvard's Introduction to Computer Science — nine problem sets in C, Python, SQL, and JavaScript.",
-    tag: "Education",
-  },
-  {
-    year: "2023",
-    title: "Google UX Design",
-    detail: "Completed Google's 7-course UX Design certificate — research, wireframes, Figma prototypes, and usability testing.",
-    tag: "Certification",
-  },
-  {
-    year: "2023",
-    title: "Full Stack Open — Helsinki",
-    detail: "Finished 14-part full-stack curriculum covering React, Node.js, GraphQL, TypeScript, and CI/CD.",
-    tag: "Education",
+    tag: "Personal",
   },
 ];
 
