@@ -37,8 +37,8 @@ export function formatRelative(iso: string): string {
 export function demoStats(): GithubStat[] {
   const stars = portfolio.mockRepos.reduce((sum, r) => sum + (r.stars || 0), 0);
   return [
-    { value: "24", label: "Repositories" },
-    { value: "186", label: "Followers" },
+    { value: nf.format(portfolio.mockRepos.length), label: "Repositories" },
+    { value: "0", label: "Followers" },
     { value: nf.format(stars), label: "Stars earned" },
   ];
 }
@@ -46,10 +46,10 @@ export function demoStats(): GithubStat[] {
 export function demoProfile(): GithubProfileView {
   return {
     name: portfolio.name,
-    bio: "Building small, sharp tools for the web.",
-    handle: `@${gh.mockUsername || "yourhandle"}`,
-    profileUrl: gh.profileUrl || "https://github.com/",
-    avatarUrl: null,
+    bio: "Full-Stack Developer & Open Source Enthusiast · Building Scalable & Performant Apps",
+    handle: `@${gh.username || "mr-peppermint"}`,
+    profileUrl: gh.profileUrl || "https://github.com/mr-peppermint",
+    avatarUrl: "https://avatars.githubusercontent.com/u/161361481?v=4",
     initials: portfolio.initials,
   };
 }
@@ -58,25 +58,33 @@ export function demoProfile(): GithubProfileView {
 /* Heatmap                                                             */
 /* ------------------------------------------------------------------ */
 
-function seedFrom(str: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < str.length; i++) {
-    h ^= str.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-function rng(seed: number): () => number {
-  let a = seed >>> 0;
-  return function () {
-    a |= 0;
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+export const REAL_CONTRIBUTIONS: Record<string, { count: number; level: number }> = {
+  "2026-04-10": { count: 2, level: 1 },
+  "2026-06-25": { count: 18, level: 4 },
+  "2026-06-26": { count: 22, level: 4 },
+  "2026-06-27": { count: 11, level: 2 },
+  "2026-06-28": { count: 3, level: 1 },
+  "2026-07-07": { count: 5, level: 1 },
+  "2026-07-13": { count: 1, level: 1 },
+  "2026-08-27": { count: 1, level: 1 },
+  "2026-09-15": { count: 1, level: 1 },
+  "2026-09-21": { count: 2, level: 1 },
+  "2026-09-22": { count: 23, level: 4 },
+  "2026-09-23": { count: 3, level: 1 },
+  "2026-09-27": { count: 1, level: 1 },
+  "2026-09-28": { count: 2, level: 1 },
+  "2026-09-29": { count: 7, level: 2 },
+  "2026-09-30": { count: 6, level: 2 },
+  "2026-10-01": { count: 9, level: 2 },
+  "2026-10-05": { count: 2, level: 1 },
+  "2026-10-06": { count: 8, level: 2 },
+  "2026-10-07": { count: 1, level: 1 },
+  "2026-10-09": { count: 1, level: 1 },
+  "2026-10-24": { count: 18, level: 4 },
+  "2026-10-25": { count: 6, level: 2 },
+  "2026-10-27": { count: 1, level: 1 },
+  "2026-10-28": { count: 5, level: 1 },
+};
 
 /**
  * Build the 53-week date grid used by both demo and live modes.
@@ -114,43 +122,34 @@ export function buildCalendar(): HeatCell[] {
   return cells;
 }
 
-function makeLevels(cells: HeatCell[]): { map: Record<string, number>; total: number; demo: boolean } {
-  const rand = rng(seedFrom(username || gh.mockUsername || "monochrome"));
-  const map: Record<string, number> = {};
-  let streak = 0;
+export function buildRealHeatmap(): Heatmap {
+  const cells = buildCalendar();
+  const levels: Record<string, number> = {};
+  const counts: Record<string, number> = {};
   let total = 0;
 
   cells.forEach((cell) => {
     if (cell.future) {
-      map[cell.iso] = -1;
+      levels[cell.iso] = -1;
       return;
     }
-    const weekday = cell.date.getDay();
-    const r = rand();
-    let level = 0;
-
-    if (streak > 0) {
-      level = rand() > 0.22 ? Math.min(4, streak > 5 ? 3 : 2) : 0;
-      streak = level > 0 ? streak + 1 : 0;
-    } else if (weekday === 0 || weekday === 6) {
-      level = r > 0.68 ? 1 : 0;
+    const hit = REAL_CONTRIBUTIONS[cell.iso];
+    if (hit) {
+      levels[cell.iso] = hit.level;
+      counts[cell.iso] = hit.count;
+      total += hit.count;
     } else {
-      level = r > 0.86 ? (r > 0.975 ? 4 : r > 0.94 ? 3 : 2) : r > 0.58 ? 1 : 0;
+      levels[cell.iso] = 0;
+      counts[cell.iso] = 0;
     }
-
-    if (level >= 2 && rand() > 0.7) streak = 1;
-    map[cell.iso] = level;
-    total += levelCounts[level];
   });
 
-  return { map, total, demo: true };
+  return { cells, levels, counts, total: total || 159, demo: false };
 }
 
-/** Date-dependent demo heatmap — run on the client after mount. */
+/** Baseline heatmap with mr-peppermint's real contributions. */
 export function demoHeatmap(): Heatmap {
-  const cells = buildCalendar();
-  const data = makeLevels(cells);
-  return { cells, levels: data.map, total: data.total, demo: true };
+  return buildRealHeatmap();
 }
 
 interface LiveDay {
@@ -226,7 +225,7 @@ export function liveReposFrom(repos: Record<string, unknown>[]): GithubRepoView[
 }
 
 export function demoRepos(): GithubRepoView[] {
-  return portfolio.mockRepos.slice(0, 6).map((r) => ({ ...r }));
+  return portfolio.mockRepos.map((r) => ({ ...r }));
 }
 
 /**
@@ -274,10 +273,10 @@ export async function fetchGithub(signal?: AbortSignal): Promise<{
     return {
       profile: {
         name: user.name || user.login,
-        bio: user.bio || "Building things on the web.",
+        bio: user.bio || "Full-Stack Developer & Open Source Enthusiast · Building Scalable & Performant Apps",
         handle: `@${user.login}`,
         profileUrl: user.html_url || `https://github.com/${user.login}`,
-        avatarUrl: user.avatar_url || null,
+        avatarUrl: user.avatar_url || "https://avatars.githubusercontent.com/u/161361481?v=4",
         initials: portfolio.initials,
       },
       stats: [
@@ -285,7 +284,7 @@ export async function fetchGithub(signal?: AbortSignal): Promise<{
         { value: nf.format(user.followers || 0), label: "Followers" },
         { value: nf.format(stars), label: "Stars earned" },
       ],
-      repos: visible.slice(0, 6),
+      repos: visible,
     };
   } catch {
     return null;

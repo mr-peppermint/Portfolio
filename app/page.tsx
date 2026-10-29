@@ -1,9 +1,12 @@
-import Navbar from "@/components/Navbar";import Hero from "@/components/Hero";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
 import Ticker from "@/components/Ticker";
 import About from "@/components/About";
 import Work from "@/components/Work";
+import Achievements from "@/components/Achievements";
 import Certificates from "@/components/Certificates";
 import GithubSection from "@/components/GithubSection";
+import CodeforcesSection from "@/components/CodeforcesSection";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
@@ -16,8 +19,10 @@ export default function Page() {
         <Ticker />
         <About />
         <Work />
+        <Achievements />
         <Certificates />
         <GithubSection />
+        <CodeforcesSection />
         <Contact />
       </main>
 

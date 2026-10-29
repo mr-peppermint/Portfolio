@@ -1,9 +1,11 @@
 const ITEMS = [
-  "Interface engineering",
-  "Motion systems",
-  "Creative development",
-  "Performance",
-  "Available for select projects",
+  "Full-Stack Development",
+  "React & Next.js",
+  "Python & FastAPI",
+  "WebGL & Particles",
+  "Creative Coding",
+  "Linux & Wayland",
+  "High Performance",
 ];
 
 export default function Ticker() {
@@ -23,6 +25,8 @@ export default function Ticker() {
       <div className="ticker-track">
         {group("a")}
         {group("b")}
+        {group("c")}
+        {group("d")}
       </div>
     </div>
   );

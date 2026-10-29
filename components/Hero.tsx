@@ -57,11 +57,6 @@ export default function Hero() {
 
       <div className="wrap hero-grid">
         <div className="hero-copy">
-          <p className="eyebrow hero-eyebrow" data-reveal>
-            <span className="status-dot" aria-hidden="true" />
-            <span>{portfolio.availability}</span>
-          </p>
-
           <h1 className={`hero-name${nameClass ? ` ${nameClass}` : ""}`} id="hero-name">
             {words.map((word, wi) => (
               <span className="word" key={wi}>

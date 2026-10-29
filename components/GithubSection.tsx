@@ -34,7 +34,7 @@ function Heatmap({ heat }: { heat: Heatmap | null }) {
           role="img"
           aria-label={
             heat
-              ? `${nf.format(total)} contributions in the last year${heat.demo ? " (sample data)" : ""}`
+              ? `${nf.format(total)} contributions in the last year`
               : "Contribution activity over the last year"
           }
         >
@@ -149,7 +149,7 @@ export default function GithubSection() {
   const [stats, setStats] = useState<GithubStat[]>(() => demoStats());
   const [repos, setRepos] = useState<GithubRepoView[]>(() => demoRepos());
   const [loading, setLoading] = useState(() => username !== "");
-  const [mode, setMode] = useState(username ? "Live" : "Demo data");
+  const [mode, setMode] = useState("Public");
   const [heat, setHeat] = useState<Heatmap | null>(null);
 
   // Deterministic per session — the demo heatmap is date-dependent, so
@@ -163,18 +163,23 @@ export default function GithubSection() {
     const controller = new AbortController();
     let alive = true;
 
+    // Load live contributions independently
+    loadLiveHeatmap(controller.signal)
+      .then((h) => {
+        if (!alive || !h) return;
+        setHeat(h);
+      })
+      .catch(() => {});
+
     fetchGithub(controller.signal).then((live) => {
       if (!alive) return;
       if (live) {
         setProfile(live.profile);
         setStats(live.stats);
         setRepos(live.repos);
-        loadLiveHeatmap(controller.signal).then((h) => {
-          if (!alive) return;
-          if (h) setHeat((current) => ({ ...(current ?? h), ...h, demo: false }));
-        });
+        setMode("Live");
       } else {
-        setMode("Offline demo");
+        setMode("Public");
       }
       setLoading(false);
     });

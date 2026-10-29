@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { portfolio } from "@/lib/content";
 
-const SECTIONS = ["work", "about", "achievements", "github", "contact"];
+const SECTIONS = ["work", "about", "milestones", "achievements", "github", "codeforces", "contact"];
 
 export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
@@ -93,8 +93,10 @@ export default function Navbar() {
         >
           <a href="#work" onClick={() => setMenuOpen(false)}>Work</a>
           <a href="#about" onClick={() => setMenuOpen(false)}>About</a>
+          <a href="#milestones" onClick={() => setMenuOpen(false)}>Milestones</a>
           <a href="#achievements" onClick={() => setMenuOpen(false)}>Credentials</a>
           <a href="#github" onClick={() => setMenuOpen(false)}>GitHub</a>
+          <a href="#codeforces" onClick={() => setMenuOpen(false)}>Codeforces</a>
           <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
         </nav>
 

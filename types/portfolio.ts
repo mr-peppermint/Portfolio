@@ -50,6 +50,30 @@ export interface GithubConfig {
   useContributionApi: boolean;
 }
 
+export interface CodeforcesConfig {
+  handle: string;
+  profileUrl: string;
+}
+
+export interface CodeforcesProfile {
+  handle: string;
+  rating: number | null;
+  maxRating: number | null;
+  rank: string | null;
+  maxRank: string | null;
+  solveCount: number;
+  profileUrl: string;
+  avatarUrl: string | null;
+}
+
+export interface CodeforcesContest {
+  contestName: string;
+  rank: number;
+  ratingChange: number;
+  newRating: number;
+  date: string;
+}
+
 export interface PortfolioContent {
   name: string;
   role: string;
@@ -60,6 +84,7 @@ export interface PortfolioContent {
   availability: string;
   portrait: string;
   github: GithubConfig;
+  codeforces: CodeforcesConfig;
   socials: Social[];
   stats: Stat[];
   skills: string[];

@@ -1,0 +1,204 @@
+/* ------------------------------ codeforces ------------------------------ */
+
+.section--cf {
+  border-block: 1px solid var(--line-soft);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 60%);
+}
+
+.cf-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.008));
+  margin-top: 32px;
+}
+
+.cf-panel--skeleton {
+  min-height: 200px;
+  padding: 28px;
+}
+
+.cf-panel--error {
+  padding: 36px 28px;
+}
+
+/* Profile card — left column */
+.cf-profile-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  align-content: start;
+  padding: 26px 24px;
+  border-right: 1px solid var(--line-soft);
+}
+
+.cf-avatar {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.045);
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  flex-shrink: 0;
+  transition: border-color 0.4s;
+}
+
+.cf-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.3) contrast(1.05);
+}
+
+.cf-avatar span {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.cf-identity {
+  min-width: 0;
+}
+
+.cf-name-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cf-name-row h3 {
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.cf-rank-badge {
+  padding: 3px 8px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  font-size: 7px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cf-stats {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 6px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-soft);
+}
+
+/* Contest history — right column */
+.cf-contests {
+  padding: 24px;
+  min-width: 0;
+}
+
+.cf-no-contests {
+  padding: 28px 24px;
+  display: flex;
+  align-items: center;
+}
+
+.cf-contests-title {
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: var(--dim);
+  margin-bottom: 14px;
+}
+
+.cf-contest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  list-style: none;
+}
+
+.cf-contest-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px 44px 44px;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  padding: 7px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: background-color 0.25s;
+}
+
+.cf-contest-row:hover {
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.cf-contest-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+  font-size: 0.71rem;
+}
+
+.cf-bar-track {
+  display: flex;
+  align-items: center;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.cf-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s var(--ease);
+}
+
+.cf-contest-delta {
+  font-size: 0.71rem;
+  font-family: var(--mono);
+  text-align: right;
+  font-weight: 500;
+}
+
+.cf-contest-rating {
+  font-size: 0.71rem;
+  font-family: var(--mono);
+  text-align: right;
+  color: var(--dim);
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .cf-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .cf-profile-card {
+    border-right: none;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .cf-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cf-contest-row {
+    grid-template-columns: minmax(0, 1fr) 44px 40px;
+  }
+
+  .cf-bar-track {
+    display: none;
+  }
+}

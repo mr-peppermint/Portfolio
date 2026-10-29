@@ -38,6 +38,7 @@ interface Particle {
   jy: number;
   shade: number;
   bucket: number;
+  color: string;
   size: number;
   k: number;
   damp: number;
@@ -52,6 +53,7 @@ interface TargetPoint {
   x: number;
   y: number;
   shade: number;
+  color: string;
 }
 
 interface Targets {
@@ -90,6 +92,8 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
   let dpr = 1;
   let particles: Particle[] = [];
   let buckets: Particle[][] = [[], [], [], []];
+  let colorGroups = new Map<string, Particle[]>();
+  let isColorMode = false;
   const offscreen = document.createElement("canvas");
   let formStart = 0;
   let formTimer = 0;
@@ -197,7 +201,8 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
     draw: (c: CanvasRenderingContext2D, w: number, h: number) => void,
     w: number,
     h: number,
-    gap: number
+    gap: number,
+    isPortrait: boolean
   ): { points: TargetPoint[]; width: number; height: number } {
     const off = newOffscreen(w, h);
     const c = off.getContext("2d", { willReadFrequently: true });
@@ -240,18 +245,39 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
       for (let xx = 0; xx < off.width; xx += gap) {
         const i = (yy * off.width + xx) * 4;
         const a = data[i + 3];
-        if (!a || a < 60) continue;
+        if (!a || a < 35) continue;
+
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
         let shade: number;
-        if (!useAlpha) {
-          const lum = 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
+        if (!useAlpha && !isPortrait) {
           if (lightImage ? lum > avg - threshold : lum < avg + threshold) continue;
           shade = lightImage ? 255 - lum : lum;
         } else {
           shade = 255;
         }
 
-        points.push({ x: xx, y: yy, shade });
+        let color: string;
+        if (isPortrait) {
+          // If dark pixel in artwork, ensure it is visible as a subtle slate tone against dark bg
+          if (r < 25 && g < 25 && b < 25) {
+            color = "rgba(70,75,85,0.85)";
+          } else {
+            // Quantize RGB in steps of 16 to keep ~50-80 color groups for high-fps batch rendering
+            const qr = Math.min(255, Math.round(r / 16) * 16);
+            const qg = Math.min(255, Math.round(g / 16) * 16);
+            const qb = Math.min(255, Math.round(b / 16) * 16);
+            const alpha = Math.min(1, Math.max(0.72, a / 255));
+            color = `rgba(${qr},${qg},${qb},${alpha.toFixed(2)})`;
+          }
+        } else {
+          color = COLORS[bucketFor(shade)];
+        }
+
+        points.push({ x: xx, y: yy, shade, color });
       }
     }
 
@@ -269,15 +295,18 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
     let data;
 
     if (portrait) {
-      data = sample((c, w, h) => drawPortrait(c, w, h, portrait!), zw, zh, gap);
+      data = sample((c, w, h) => drawPortrait(c, w, h, portrait!), zw, zh, gap, true);
+      isColorMode = true;
     } else {
-      data = sample(drawMonogram, zw, zh, gap);
+      data = sample(drawMonogram, zw, zh, gap, false);
+      isColorMode = false;
     }
 
     if (!data || !data.points || data.points.length < 40) {
       if (portrait) {
         // Sampling failed (missing/tainted image) — fall back to the monogram.
         portrait = null;
+        isColorMode = false;
         return getTargets();
       }
       return null;
@@ -289,7 +318,12 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
     const oy = zr.top - cr.top;
 
     return {
-      points: data.points.map((p) => ({ x: ox + p.x * sx, y: oy + p.y * sy, shade: p.shade })),
+      points: data.points.map((p) => ({
+        x: ox + p.x * sx,
+        y: oy + p.y * sy,
+        shade: p.shade,
+        color: p.color,
+      })),
       center: { x: ox + zw / 2, y: oy + zh / 2 },
     };
   }
@@ -299,8 +333,8 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
   /* ------------------------------------------------------------------ */
 
   function particleCount(points: number): number {
-    const max = W < 700 ? 2800 : 5200;
-    const min = W < 700 ? 700 : 1000;
+    const max = W < 700 ? 4200 : 8000;
+    const min = W < 700 ? 1200 : 2200;
     const target = Math.round(points * 1.15);
     return Math.max(min, Math.min(max, target));
   }
@@ -326,7 +360,8 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
       jy,
       shade: t.shade,
       bucket: bucketFor(t.shade),
-      size: 1.15 + Math.random() * 1.15,
+      color: t.color,
+      size: 1.25 + Math.random() * 1.25,
       k: 0.0028 + Math.random() * 0.0032,
       damp: 0.9 + Math.random() * 0.022,
       swirl: 0.55 + Math.random() * 1.0,
@@ -353,6 +388,7 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
           q.tx = t.x + q.jx;
           q.ty = t.y + q.jy;
           q.shade = t.shade;
+          q.color = t.color;
           const nb = bucketFor(t.shade);
           if (nb !== q.bucket) q.bucket = nb;
           buckets[q.bucket].push(q);
@@ -374,6 +410,17 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
         particles.push(p);
         buckets[p.bucket].push(p);
       }
+    }
+
+    colorGroups = new Map<string, Particle[]>();
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      let g = colorGroups.get(p.color);
+      if (!g) {
+        g = [];
+        colorGroups.set(p.color, g);
+      }
+      g.push(p);
     }
 
     zoneCenter = targets.center;
@@ -439,24 +486,42 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
   }
 
   function paint(time: number): void {
-    ctx!.globalCompositeOperation = "lighter";
-    for (let b = 0; b < 4; b++) {
-      const group = buckets[b];
-      if (!group.length) continue;
-      ctx!.fillStyle = COLORS[b];
-      ctx!.beginPath();
-      for (let i = 0; i < group.length; i++) {
-        const p = group[i];
-        let s = p.size;
-        // A whisper of shimmer once formed.
-        if (settled) {
-          s += Math.sin(time * 1.2 + p.seed) * 0.14;
+    if (isColorMode) {
+      ctx!.globalCompositeOperation = "source-over";
+      for (const [color, group] of colorGroups) {
+        if (!group.length) continue;
+        ctx!.fillStyle = color;
+        ctx!.beginPath();
+        for (let i = 0; i < group.length; i++) {
+          const p = group[i];
+          let s = p.size;
+          if (settled) {
+            s += Math.sin(time * 1.2 + p.seed) * 0.14;
+          }
+          ctx!.rect(p.x, p.y, s, s);
         }
-        ctx!.rect(p.x, p.y, s, s);
+        ctx!.fill();
       }
-      ctx!.fill();
+    } else {
+      ctx!.globalCompositeOperation = "lighter";
+      for (let b = 0; b < 4; b++) {
+        const group = buckets[b];
+        if (!group.length) continue;
+        ctx!.fillStyle = COLORS[b];
+        ctx!.beginPath();
+        for (let i = 0; i < group.length; i++) {
+          const p = group[i];
+          let s = p.size;
+          // A whisper of shimmer once formed.
+          if (settled) {
+            s += Math.sin(time * 1.2 + p.seed) * 0.14;
+          }
+          ctx!.rect(p.x, p.y, s, s);
+        }
+        ctx!.fill();
+      }
+      ctx!.globalCompositeOperation = "source-over";
     }
-    ctx!.globalCompositeOperation = "source-over";
   }
 
   /* ------------------------------------------------------------------ */
@@ -665,6 +730,7 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
     if (options.portrait) {
       const img = new Image();
       img.decoding = "async";
+      img.crossOrigin = "anonymous";
       let booted = false;
       const finish = () => {
         if (booted || destroyed) return;
@@ -675,9 +741,14 @@ export function createParticlePortrait(options: ParticlePortraitOptions): Partic
         portrait = img;
         finish();
       };
-      img.onerror = finish;
-      window.setTimeout(finish, 1800);
-      img.src = options.portrait;
+      img.onerror = () => {
+        finish();
+      };
+      window.setTimeout(finish, 2500);
+      const src = options.portrait.startsWith("/") || options.portrait.startsWith("http")
+        ? options.portrait
+        : `/${options.portrait}`;
+      img.src = src;
     } else {
       init();
     }

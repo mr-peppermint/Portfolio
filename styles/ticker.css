@@ -3,9 +3,9 @@
 .ticker {
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid var(--line-soft);
+  border-block: 1px solid var(--line-soft);
   background: #090a0b;
-  padding-block: 15px;
+  padding-block: 14px;
 }
 
 .ticker::before,
@@ -32,7 +32,8 @@
 .ticker-track {
   display: flex;
   width: max-content;
-  animation: marquee 42s linear infinite;
+  will-change: transform;
+  animation: marquee 38s linear infinite;
 }
 
 .ticker:hover .ticker-track {
