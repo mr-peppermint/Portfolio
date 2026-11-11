@@ -11,6 +11,14 @@ export interface ChromaItem {
   url?: string;
   alt?: string;
   borderColor?: string;
+  liveUrl?: string;
+  readmeDescription?: string;
+  aiSummary?: {
+    overview: string;
+    features: string[];
+    techStack: string[];
+    highlight: string;
+  };
 }
 
 export interface ChromaGridProps {
@@ -33,6 +41,7 @@ export interface ChromaGridProps {
   frame?: boolean;
   theme?: 'dark' | 'light';
   className?: string;
+  onItemClick?: (item: ChromaItem) => void;
 }
 
 const THEMES: Record<'dark' | 'light', Record<string, string>> = {
@@ -70,45 +79,6 @@ const THEMES: Record<'dark' | 'light', Record<string, string>> = {
   }
 };
 
-const DEFAULT_ITEMS: ChromaItem[] = [
-  {
-    image: 'https://images.unsplash.com/photo-1514519334989-3d5c8b1a9f91?w=800&q=80&auto=format&fit=crop',
-    title: 'Golden Hour',
-    subtitle: 'Sky study',
-    accent: '#ff8a4c'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1520930528075-4ea5ead759f5?w=800&q=80&auto=format&fit=crop',
-    title: 'Steel Arches',
-    subtitle: 'Sculpture',
-    accent: '#ff5a36'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1511300636408-a63a89df3482?w=800&q=80&auto=format&fit=crop',
-    title: 'Black Beach',
-    subtitle: 'Landscape',
-    accent: '#a98bff'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1524400968894-6e997a66e03f?w=800&q=80&auto=format&fit=crop',
-    title: 'Cloud Front',
-    subtitle: 'Weather',
-    accent: '#ffb27a'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1778849097774-0ab2a873a858?w=800&q=80&auto=format&fit=crop',
-    title: 'Pink Drift',
-    subtitle: 'Sky study',
-    accent: '#ff7eb6'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1501630834273-4b5604d2ee31?w=800&q=80&auto=format&fit=crop',
-    title: 'Cumulus',
-    subtitle: 'Weather',
-    accent: '#7cc4ff'
-  }
-];
-
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 const falloffStops = (softness: number) => {
@@ -142,12 +112,13 @@ export const ChromaGrid = ({
   showInfo = true,
   frame = false,
   theme = 'dark',
-  className = ''
+  className = '',
+  onItemClick
 }: ChromaGridProps) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const settingsRef = useRef<{ damping: number; fadeOut: number; spotlight: boolean } | null>(null);
   const placeRef = useRef<(() => void) | null>(null);
-  const data = items?.length ? items : DEFAULT_ITEMS;
+  const data = items?.length ? items : [];
   settingsRef.current = { damping, fadeOut, spotlight: reveal !== 'card' };
 
   useEffect(() => {
@@ -269,6 +240,7 @@ export const ChromaGrid = ({
           const accent = item.accent ?? item.borderColor ?? '#ffffff';
           const key = `${item.title}-${index}`;
           const cardStyle = { '--chroma-accent': accent } as CSSProperties;
+
           const body = (
             <>
               <span className="chroma-wash" aria-hidden="true" />
@@ -276,10 +248,26 @@ export const ChromaGrid = ({
                 <img className="chroma-mono" src={item.image} alt={item.alt ?? item.title ?? ''} loading="lazy" />
                 <img className="chroma-color" src={item.image} alt="" aria-hidden="true" loading="lazy" />
                 <span className="chroma-media-rim" aria-hidden="true" />
+
+                {/* AI Preview badge overlay */}
+                <div className="chroma-ai-badge" aria-hidden="true">
+                  <span>✦ AI PREVIEW</span>
+                </div>
               </div>
+
               {showInfo && (item.title || item.subtitle) && (
                 <div className="chroma-info">
-                  {item.title && <span className="chroma-title">{item.title}</span>}
+                  <div className="chroma-title-row">
+                    {item.title && <span className="chroma-title">{item.title}</span>}
+                    <div className="chroma-card-actions">
+                      {item.liveUrl && (
+                        <span className="chroma-live-pill" title="Live demo available">
+                          LIVE
+                        </span>
+                      )}
+                      <span className="chroma-inspect-arrow">↗</span>
+                    </div>
+                  </div>
                   {item.subtitle && <span className="chroma-subtitle">{item.subtitle}</span>}
                 </div>
               )}
@@ -287,6 +275,22 @@ export const ChromaGrid = ({
               <span className="chroma-card-glow" aria-hidden="true" />
             </>
           );
+
+          if (onItemClick) {
+            return (
+              <button
+                key={key}
+                type="button"
+                className="chroma-card chroma-card--btn"
+                data-chroma-area=""
+                style={cardStyle}
+                onClick={() => onItemClick(item)}
+              >
+                {body}
+              </button>
+            );
+          }
+
           return item.url ? (
             <a
               key={key}

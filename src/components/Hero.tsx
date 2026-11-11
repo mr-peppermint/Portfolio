@@ -3,7 +3,11 @@ import HandsBackground from './HandsBackground';
 import TechText from './TechText/TechText';
 import TextLoop from './TextLoop/TextLoop';
 import ChromaGrid from './ChromaGrid/ChromaGrid';
-import { profile } from '../config';
+import GithubContributionGraph from './Github/GithubContributionGraph';
+import CertificatesSection from './Certificates/Certificates';
+import CodeforcesSection from './Codeforces/CodeforcesSection';
+import ProjectPreviewModal from './ProjectPreview/ProjectPreviewModal';
+import { profile, ProjectItem } from '../config';
 import './Hero.css';
 
 type CfUser = { rating?: number; maxRating?: number; rank?: string };
@@ -29,7 +33,7 @@ const ExeWindow = () => {
     fetch(`https://codeforces.com/api/user.info?handles=${encodeURIComponent(handle)}`)
       .then(r => r.json())
       .then(d => {
-        if (!dead && d.status === 'OK') setUser(d.result[0]);
+        if (!dead && d.status === 'OK' && d.result?.[0]) setUser(d.result[0]);
       })
       .catch(() => {});
     return () => {
@@ -52,7 +56,7 @@ const ExeWindow = () => {
       <div className="exe-body">
         <div className="exe-row">
           <b>CODEFORCES</b>
-          <span>{handle ? `@${handle}` : '@user'}</span>
+          <span>{handle ? `@${handle}` : '@Dexter.1'}</span>
         </div>
         <div className="exe-row">
           <span>RATING</span>
@@ -75,22 +79,23 @@ const ExeWindow = () => {
 const Hero = () => {
   const { w, h } = useViewport();
   const [second, setSecond] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
 
   useEffect(() => {
     const t = window.setTimeout(() => setSecond(true), 600);
     return () => window.clearTimeout(t);
   }, []);
 
-  const size = Math.round(Math.max(48, Math.min(w * 0.08, h * 0.13, 130)));
+  const size = Math.round(Math.max(48, Math.min(w * 0.08, h * 0.12, 120)));
   const boxW = size * 4.6;
 
   return (
-    <div className="portfolio-wrap">
-      {/* 1. HERO VIEWPORT */}
+    <div className="portfolio-wrap" id="top">
+      {/* 1. HERO VIEWPORT (100vh) */}
       <section className="hero" style={{ minHeight: h }}>
         <header className="hero-top">
-          <a href="#" className="hero-logo">
-            DD<em>//</em>PORTFOLIO
+          <a href="#top" className="hero-logo">
+            {profile.initials}<em>//</em>PORTFOLIO
           </a>
           <nav>
             {profile.nav.map(n => (
@@ -101,7 +106,7 @@ const Hero = () => {
           </nav>
         </header>
 
-        {/* CENTER STAGE: HANDS + TRANSPARENT TERMINAL */}
+        {/* FULL-SCREEN CENTER STAGE: ARMS FIT TO SCREEN + TRANSPARENT TERMINAL */}
         <div className="hero-stage">
           <HandsBackground />
           <ExeWindow />
@@ -158,7 +163,7 @@ const Hero = () => {
         <TextLoop
           text={profile.loopText}
           shape="line"
-          tilt={-2.2}
+          tilt={-2.0}
           speed={85}
           separator="✦"
           fontSize={44}
@@ -171,16 +176,20 @@ const Hero = () => {
         />
       </section>
 
-      {/* 3. GITHUB PROJECTS SECTION (ChromaGrid) */}
+      {/* 3. GITHUB PROJECTS SECTION (Contribution Graph + ChromaGrid with AI Preview) */}
       <section id="projects" className="projects-section">
         <div className="projects-header">
-          <div className="projects-tag">// REPOSITORIES &amp; OPEN SOURCE</div>
-          <h2 className="projects-title">FEATURED GITHUB PROJECTS</h2>
+          <div className="projects-tag">// 01 / OPEN SOURCE &amp; REPOSITORIES</div>
+          <h2 className="projects-title">BUILT IN PUBLIC</h2>
           <p className="projects-desc">
-            An overview of open-source libraries, systems, and creative experiments built with modern stacks.
+            All original repositories authored by {profile.name} (@{profile.githubUsername}). Select any project card to open its GPT-OSS 120B AI architectural breakdown, synthesized directly from the README.
           </p>
         </div>
 
+        {/* GitHub Contribution Graph */}
+        <GithubContributionGraph />
+
+        {/* ChromaGrid showing all original repositories with preview trigger */}
         <div className="projects-grid-wrap">
           <ChromaGrid
             items={profile.projects}
@@ -197,6 +206,7 @@ const Hero = () => {
             reveal="spotlight"
             theme="dark"
             frame={true}
+            onItemClick={item => setSelectedProject(item as ProjectItem)}
           />
         </div>
 
@@ -207,31 +217,73 @@ const Hero = () => {
             rel="noopener noreferrer"
             className="github-cta-btn"
           >
-            <span>VIEW ALL ON GITHUB</span>
+            <span>VIEW ALL REPOSITORIES ON GITHUB</span>
             <span className="cta-arrow">→</span>
           </a>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="portfolio-footer" id="contact">
+      {/* 4. CREDENTIALS & HACKATHONS SECTION */}
+      <CertificatesSection />
+
+      {/* 5. CODEFORCES STATS SECTION */}
+      <CodeforcesSection />
+
+      {/* 6. CONTACT & SOCIALS SECTION (Matching main branch style) */}
+      <section className="contact-section" id="contact">
+        <div className="contact-inner">
+          <p className="contact-tag">// 04 / GET IN TOUCH</p>
+          <h2 className="contact-title">
+            Let&apos;s build something
+            <br />
+            <em>tactile</em>.
+          </h2>
+          <p className="contact-desc">
+            Interested in collaboration, creative engineering, or competitive programming discussions? Drop a message.
+          </p>
+
+          <a
+            className="contact-email-btn"
+            href={`mailto:${profile.email}`}
+            aria-label={`Email ${profile.email}`}
+          >
+            <span>{profile.email}</span>
+            <span className="email-arrow">↗</span>
+          </a>
+
+          {/* Social Links from main branch */}
+          <ul className="socials-list" aria-label="Social links">
+            {profile.socials.map(s => (
+              <li key={s.label}>
+                <a href={s.href} target="_blank" rel="noopener noreferrer">
+                  <span className="social-short">{s.short}</span>
+                  <span>{s.label}</span>
+                  <span className="social-arrow" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* 7. SITE FOOTER */}
+      <footer className="portfolio-footer">
         <div className="footer-inner">
-          <span className="footer-brand">DIXIT DAHIYA ✦ {new Date().getFullYear()}</span>
+          <div className="footer-col">
+            <span className="footer-brand">{profile.initials} ✦ {profile.name}</span>
+            <p className="footer-sub">Monochrome by choice. {new Date().getFullYear()}</p>
+          </div>
           <div className="footer-links">
-            <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer">
-              GITHUB
-            </a>
-            <a
-              href={`https://codeforces.com/profile/${profile.codeforcesHandle}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              CODEFORCES
-            </a>
-            <a href="#">BACK TO TOP ↑</a>
+            <a href="#top">BACK TO TOP ↑</a>
           </div>
         </div>
       </footer>
+
+      {/* 8. PROJECT PREVIEW MODAL (GPT-OSS 120B AI README SYNTHESIS) */}
+      <ProjectPreviewModal
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
     </div>
   );
 };
