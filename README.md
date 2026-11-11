@@ -1,335 +1,245 @@
-# Monochrome Portfolio — Next.js
+# Portfolio Template
 
-A fast, single-page, responsive monochrome portfolio. Your name lands first, then thousands of particles swirl in from across the screen and assemble into a large centred portrait behind the name — displaying your initials, or a photo once configured.
+A Next.js 16+ personal portfolio template built around a signature WebGL flow shader, a magnetic morphing portrait, Lenis smooth scroll, and a calm black-and-white design system. Designed for individual designers and engineers who want a brand-ready scaffold with a distinctive look on day one.
 
-Built with **Next.js 16 (App Router, TypeScript, React 19)** configured for **static export (`output: "export"`)** — generates pure HTML/CSS/JS in `out/` with zero runtime server required.
+## Features
 
----
+- ✅ **Next.js 16+** with App Router
+- ✅ **TypeScript** (strict mode)
+- ✅ **Tailwind CSS v4** with token-driven theming
+- ✅ **Dark Mode** via next-themes (class-based) with view-transition reveal
+- ✅ **Motion** via motion/react with reduced-motion support
+- ✅ **WebGL Flow Shader** — aspect-correct circular fade baked into the fragment, theme-aware bg sync
+- ✅ **Lenis Smooth Scroll** with anchor-link integration
+- ✅ **Portrait Morph** — hover-driven webp swap with magnetic cursor follow
+- ✅ **Polaroid Strip, Skills, Stack, Experience, Education** — co-located content sections for an `/about` route
+- ✅ **Projects Grid** — dribbble-style mockup cards with hover lift and image zoom
+- ✅ **Contact Card** — single-click copy email with hover content swap, embedded shader
+- ✅ **Animated Pill Nav** — spring-animated active indicator, hydration-safe theme toggle
+- ✅ **Site Frame** — fixed top/left/right rails with rounded inner corners
+- ✅ **SEO Ready** — metadata, Open Graph, Twitter cards, sitemap, robots
+- ✅ **Accessibility** — skip links, focus rings, ARIA labels, `prefers-reduced-motion` guards
+- ✅ **Edge Compatible** — no Node-only APIs
 
-## Table of Contents
+## Sections Included
 
-1. [Local Development](#local-development)
-2. [Hosting & Deployment Guide](#hosting--deployment-guide)
-   - [Option 1: Vercel (Recommended & Easiest)](#option-1-vercel-recommended--easiest)
-   - [Option 2: GitHub Pages](#option-2-github-pages)
-   - [Option 3: Netlify](#option-3-netlify)
-   - [Option 4: Cloudflare Pages](#option-4-cloudflare-pages)
-   - [Option 5: Traditional VPS / Docker / Static Web Server (Nginx, Apache, Caddy)](#option-5-traditional-vps--static-web-server)
-3. [Configuration & Customization](#configuration--customization)
-4. [Project Structure](#project-structure)
-5. [Features](#features)
+- **Nav** — Fixed pill nav with spring-animated active indicator and hydration-safe theme toggle
+- **Hero** — WebGL flow shader backdrop, two-line headline, morphing portrait, magnetic CTAs
+- **Projects** — Grid of dribbble-style project cards with hover lift, image zoom, and external links
+- **About** — Polaroid strip, skills grid, interactive Matter.js stack chips, expandable experience timeline, education list
+- **Contact Card** — Embedded shader, copy-to-clipboard email, secondary social CTAs
+- **Page Backdrop** — Site-wide flow shader, mobile-attenuated, baked radial fade to background
+- **Skip-to-Content** — Keyboard-first accessibility entry point
 
----
+## Getting Started
 
-## Local Development
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18.18.0 or later)
-- npm, pnpm, or yarn
-
-### Installation & Run
+### Install dependencies
 
 ```bash
-# Install dependencies
 npm install
+```
 
-# Start local development server (with Turbopack)
+### Run development server
+
+```bash
 npm run dev
 ```
 
-Visit [`http://localhost:3000`](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
----
+## Scripts
 
-## Hosting & Deployment Guide
-
-This project is configured as a **static export** (`output: "export"` in `next.config.ts`). Running `npm run build` generates a standalone `out/` directory containing all HTML, CSS, JavaScript, and assets. You can deploy it to any static web hosting platform for free.
-
-### Option 1: Vercel (Recommended & Easiest)
-
-Vercel natively supports Next.js applications and handles static builds automatically.
-
-#### Method A: Via Web UI (Easiest)
-1. Push your repository to GitHub: `git push origin main`.
-2. Visit [vercel.com](https://vercel.com) and log in.
-3. Click **"Add New..."** > **"Project"**.
-4. Import your repository (`mr-peppermint/Portfolio`).
-5. Vercel automatically detects Next.js:
-   - **Framework Preset**: Next.js
-   - **Build Command**: `next build` (or `npm run build`)
-   - **Output Directory**: `out` (Next.js static export default)
-6. Click **Deploy**. Any future commits to `main` will automatically trigger a new deployment.
-
-#### Method B: Via Vercel CLI
-```bash
-npm i -g vercel
-vercel login
-vercel
-# For production deployment:
-vercel --prod
-```
-
----
-
-### Option 2: GitHub Pages
-
-Since your repository is on GitHub (`mr-peppermint/Portfolio`), you can host it using GitHub Pages.
-
-#### 1. Important: Base Path Configuration
-If hosting at a subpath URL like `https://mr-peppermint.github.io/Portfolio/`, update [`next.config.ts`](./next.config.ts):
-
-```ts
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  output: "export",
-  trailingSlash: true,
-  images: { unoptimized: true },
-  basePath: process.env.NODE_ENV === "production" ? "/Portfolio" : "",
-};
-
-export default nextConfig;
-```
-*(If deploying to a custom domain like `portfolio.yourname.com` or a user page `username.github.io`, you can omit `basePath`)*.
-
-#### 2. Automated Deployment via GitHub Actions
-Create `.github/workflows/deploy.yml` in your project:
-
-```yaml
-name: Deploy Next.js to GitHub Pages
-
-on:
-  push:
-    branches: ["main"]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Detect package manager
-        id: detect-package-manager
-        run: |
-          if [ -f "${{ github.workspace }}/package-lock.json" ]; then
-            echo "manager=npm" >> $GITHUB_OUTPUT
-            echo "command=ci" >> $GITHUB_OUTPUT
-            echo "runner=npx --no-install" >> $GITHUB_OUTPUT
-            exit 0
-          else
-            echo "Unable to determine package manager"
-            exit 1
-          fi
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: ${{ steps.detect-package-manager.outputs.manager }}
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          static_site_generator: next
-      - name: Install dependencies
-        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Build with Next.js
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-```
-
-In your GitHub repository settings:
-1. Go to **Settings** > **Pages**.
-2. Under **Build and deployment** > **Source**, choose **GitHub Actions**.
-3. Push your changes to `main` and the site will deploy automatically.
-
----
-
-### Option 3: Netlify
-
-#### Method A: Via Git Integration
-1. Log in to [netlify.com](https://www.netlify.com).
-2. Click **"Add new site"** > **"Import an existing project"**.
-3. Select your GitHub repository.
-4. Set build settings:
-   - **Build command**: `npm run build`
-   - **Publish directory**: `out`
-5. Click **Deploy Site**.
-
-#### Method B: Netlify CLI / Drag and Drop
-1. Run local build:
-   ```bash
-   npm run build
-   ```
-2. You can drag and drop the generated `out/` folder directly onto [app.netlify.com/drop](https://app.netlify.com/drop).
-
----
-
-### Option 4: Cloudflare Pages
-
-1. Log in to the [Cloudflare Dashboard](https://dash.cloudflare.com/) and navigate to **Workers & Pages**.
-2. Click **Create Application** > **Pages** > **Connect to Git**.
-3. Select your repository.
-4. Set build settings:
-   - **Framework preset**: None / Next.js (Static HTML Export)
-   - **Build command**: `npm run build`
-   - **Build output directory**: `out`
-5. Click **Save and Deploy**.
-
----
-
-### Option 5: Traditional VPS / Static Web Server
-
-If you are hosting on your own Linux server (Ubuntu/Debian, VPS, AWS EC2, DigitalOcean Droplet):
-
-#### 1. Build the static assets:
-```bash
-npm run build
-```
-This outputs all pre-rendered HTML, JavaScript, and CSS into the `out/` directory.
-
-#### 2. Nginx Configuration
-Copy the contents of `out/` to `/var/www/portfolio`:
-```bash
-sudo mkdir -p /var/www/portfolio
-sudo cp -r out/* /var/www/portfolio/
-sudo chown -R www-data:www-data /var/www/portfolio
-```
-
-Add an Nginx server block in `/etc/nginx/sites-available/portfolio`:
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com www.yourdomain.com;
-
-    root /var/www/portfolio;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ $uri.html /index.html;
-    }
-
-    # Enable gzip compression for fast delivery
-    gzip on;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml;
-
-    # Cache static assets
-    location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|eot|ttf|svg)$ {
-        expires 6M;
-        access_log off;
-        add_header Cache-Control "public";
-    }
-}
-```
-Enable the site and reload Nginx:
-```bash
-sudo ln -s /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-#### 3. Preview locally with a lightweight HTTP server:
-```bash
-npx serve out
-```
-
----
-
-## Configuration & Customization
-
-Everything content-related lives in [`lib/content.ts`](./lib/content.ts) — edit this file to personalize the site:
-
-```ts
-export const portfolio = {
-  name: "Dixit Dahiya",     // Hero headline, nav title, footer
-  role: "Creative Developer",
-  initials: "DD",           // Particle monogram & fallback avatar
-  portrait: "",             // Path to image in public/, e.g. "/portrait.png"
-  email: "hello@yourname.dev",
-  location: "Remote — Worldwide",
-  availability: "Open to select projects",
-
-  github: {
-    username: "",           // Set your username (e.g. "octocat") for live GitHub data & heatmap
-    mockUsername: "yourhandle",
-    profileUrl: "https://github.com/yourhandle",
-    useContributionApi: true,
-  },
-
-  socials: [ ... ],
-  stats: [ ... ],
-  skills: [ ... ],
-  projects: [ ... ],
-  certificates: [ ... ],
-  mockRepos: [ ... ],
-};
-```
-
-### Portrait image:
-Add a transparent PNG to `public/portrait.png` and set `portrait: "/portrait.png"` in `lib/content.ts`. The particle system will sample the image and reassemble particles to recreate your photo!
-
----
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
+| `npm run lint:fix` | Fix ESLint errors |
+| `npm run format` | Format code with Prettier |
+| `npm run format:check` | Check code formatting |
+| `npm run typecheck` | Run TypeScript type checking |
 
 ## Project Structure
 
 ```
-Portfolio/
-├── app/                  # Next.js App Router (layout, page, metadata, globals.css)
-├── components/           # UI Components
-│   ├── Navbar.tsx        # Scroll-aware navigation bar
-│   ├── Hero.tsx          # Headline, call to action, particle intro trigger
-│   ├── ParticleStage.tsx # Canvas wrapper for WebGL/2D particle system
-│   ├── Work.tsx          # Project showcase with category filters
-│   ├── Certificates.tsx  # Credential grid with modal dialog
-│   ├── GithubSection.tsx # GitHub profile, activity heatmap, repo cards
-│   ├── Contact.tsx       # Direct contact form / copy-email toast
-│   ├── Footer.tsx        # Site footer
-│   ├── Chrome.tsx        # Cursor, progress bar, skip link, grain texture
-│   ├── MotionEffects.tsx # Magnetic buttons & cursor spotlight
-│   ├── RevealProvider.tsx# Scroll-triggered entrance animations
-│   ├── Socials.tsx       # Social links list
-│   └── Ticker.tsx        # Infinite marquee ticker
+├── app/
+│   ├── about/                       # About route
+│   ├── projects/                    # Projects route
+│   ├── globals.css                  # Design tokens, frame, project-card styles
+│   ├── layout.tsx                   # Root layout with providers, nav, backdrop
+│   ├── page.tsx                     # Home page
+│   ├── robots.ts                    # Dynamic robots.txt
+│   ├── sitemap.ts                   # Dynamic sitemap
+│   ├── icon.svg                     # Favicon
+│   └── apple-icon.svg               # Apple touch icon
+├── components/
+│   ├── about/
+│   │   ├── education.tsx            # Education list with bordered logo squares
+│   │   ├── experience.tsx           # Expandable timeline with fade-mask collapse
+│   │   ├── polaroid-strip.tsx       # Tilted polaroid photos with dotted backs
+│   │   ├── skills.tsx               # Skills grid
+│   │   └── stack.tsx                # Matter.js physics-driven tech chips
+│   ├── contact/
+│   │   ├── contact-button.tsx       # Click-to-copy email button
+│   │   ├── contact-card.tsx         # Shader-backed contact card
+│   │   └── contact-card-ctas.tsx    # Social CTAs
+│   ├── hero/
+│   │   ├── hero.tsx                 # Hero layout and copy
+│   │   ├── hero-ctas.tsx            # Magnetic primary/secondary CTAs
+│   │   └── portrait-morph.tsx       # Hover-swap portrait with magnetic follow
+│   ├── layout/
+│   │   ├── nav.tsx                  # Pill nav with theme toggle
+│   │   ├── page-backdrop.tsx        # Site-wide shader backdrop
+│   │   ├── providers.tsx            # Theme + smooth-scroll providers
+│   │   ├── skip-to-content.tsx      # Skip link for a11y
+│   │   └── smooth-scroll.tsx        # Lenis smooth-scroll wrapper
+│   ├── projects/
+│   │   └── projects.tsx             # Projects grid
+│   ├── shaders/
+│   │   └── shader-flow.tsx          # WebGL flow shader (raw OGL)
+│   └── ui/
+│       ├── dotted-pattern.tsx       # Shared dotted texture
+│       └── motion-primitives.tsx    # FadeIn, ScaleUnblur entrance helpers
 ├── lib/
-│   ├── content.ts        # Single source of truth for portfolio data
-│   ├── particles.ts      # Canvas-based spring particle physics engine
-│   └── github.ts         # GitHub API integration & contribution calendar generator
-├── public/               # Static assets (favicons, portrait, etc.)
-├── styles/               # Modular CSS partials preserving style cascade
-├── types/                # TypeScript interfaces (Portfolio, GitHub, Heatmap)
-├── next.config.ts        # Next.js static export configuration
-├── tsconfig.json         # TypeScript configuration
-└── package.json          # Dependencies and scripts
+│   ├── config.ts                    # Site config
+│   ├── metadata.ts                  # SEO metadata utilities
+│   └── motion.tsx                   # Motion components & hooks
+└── public/
+    ├── josh.webp                    # Default portrait
+    ├── josh_wave.webp               # Hover portrait
+    ├── linkedin.svg                 # Social icon
+    ├── x.svg                        # Social icon
+    └── site.webmanifest             # PWA manifest
 ```
 
----
+## Customization
 
-## Features
+### 1. Update Site Configuration
 
-- **Dynamic Particle System**: Interactive 2D canvas particle field with spring physics, mouse avoidance/repulsion, and custom monogram or photo reconstruction.
-- **Accessible & Performance-focused**: Pre-rendered static HTML, zero JavaScript layout shifts, reduced-motion fallbacks (`prefers-reduced-motion`), keyboard accessibility, and ARIA dialogs.
-- **GitHub Live Sync**: Optional live integration with GitHub API for repositories, follower/star stats, and contribution activity heatmap (falls back gracefully to offline demo data).
-- **Interactive Micro-interactions**: Magnetic buttons, cursor spotlights, smooth category filtering, custom cursor (fine pointers only), and copy-to-clipboard toast notifications.
-- **Zero Server Costs**: Fully pre-rendered static export compatible with any free static CDN or hosting provider.
+Edit `lib/metadata.ts` to update:
+- Site name, description, and URL
+- Social media handles
+- Keywords and authors
+
+The default `siteConfig.url` is `https://example.com` — replace it with your production URL before deploying so OpenGraph and the sitemap emit correct absolute URLs.
+
+### 2. Replace Brand & Portrait
+
+- Swap `public/josh.webp` and `public/josh_wave.webp` with your own default + hover portraits. Keep both files the same dimensions and aspect ratio for a clean morph.
+- Update headline, eyebrow, and subtitle copy in `components/hero/hero.tsx`.
+- Update social handles and email in `components/contact/contact-card.tsx` and `components/contact/contact-card-ctas.tsx`.
+
+### 3. Update About Content
+
+All about-page content is co-located in its component file — there is no separate content directory.
+
+- `components/about/polaroid-strip.tsx` — image paths and captions
+- `components/about/skills.tsx` — skill list
+- `components/about/stack.tsx` — tech logos and physics chips
+- `components/about/experience.tsx` — roles, companies, dates, descriptions
+- `components/about/education.tsx` — schools, programs, dates
+
+### 4. Update Projects
+
+Edit the project array in `components/projects/projects.tsx`. Each entry includes a title, description, image (dribbble mockup or your own), and external link.
+
+### 5. Replace Icons
+
+Replace the following files with your brand assets:
+- `app/icon.svg` — Favicon (32x32)
+- `app/apple-icon.svg` — Apple touch icon (180x180)
+- `public/og-image.png` — Open Graph image (1200x630)
+
+### 6. Tune the Shader
+
+The flow shader (`components/shaders/shader-flow.tsx`) is used by both the page backdrop and the contact card. Key knobs (all exposed as props with sensible defaults):
+
+- `colorLowA`, `colorHighA` — palette stops in linear RGB
+- `flowSpeed` — `[x, y]` flow vector
+- `iterations` — domain-warp iteration count (up to 24)
+- `scale` — domain scale
+- `brightness` — output multiplier
+- `fadeCx`, `fadeCy`, `fadeRx`, `fadeRy` — aspect-correct circular fade center and radii. The fade is baked into the fragment shader and reads `--background` from CSS so theme changes are picked up automatically via a `MutationObserver` on `<html>`.
+
+The shader:
+- Caps DPR at `min(devicePixelRatio, 1.25)` for `ShaderFlow`
+- Sizes to host container via `ResizeObserver`
+- Pauses via `IntersectionObserver` when offscreen and on `visibilitychange`
+- Uses `highp` precision; renders a single opaque draw (no CSS mask layers)
+
+### 7. Add Routes
+
+```tsx
+// app/contact/page.tsx
+import { createMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = createMetadata({
+  title: "Contact",
+  description: "Get in touch.",
+  path: "/contact",
+});
+
+export default function ContactPage() {
+  return <main id="main-content">...</main>;
+}
+```
+
+## Design System
+
+### Colors
+
+- `--background` / `--foreground` — Page background and text
+- `--muted` / `--muted-foreground` — Subtle surfaces and secondary text
+- `--border` — Hairline rails and dividers
+- `--ring` — Focus rings
+- `--frame` — Site-frame color (matches `--background`)
+
+The palette is strict black and white. No accent or semantic color hues are used.
+
+### Typography
+
+- **Sans:** Geist Sans
+- **Mono:** Geist Mono
+- **Serif:** Fraunces (used selectively for display headlines)
+
+### Layout Conventions
+
+- Headlines: maximum two lines, no italic, no em-dashes
+- Site frame: fixed top + left + right rails with two top corner cutouts (desktop only; hidden under 850px)
+- Card hovers: project cards use a single resting + single hover shadow tier with translate-y lift
+- No `backdrop-blur` (except the experience collapsed-fade)
+- Cursor: `pointer` on all clickable nav and CTA items
+
+## Accessibility
+
+The template includes:
+- Skip-to-content link
+- Visible focus rings on all interactive elements
+- ARIA labels on toggles, social links, and the contact button
+- `prefers-reduced-motion` guards on the theme toggle view-transition
+- Shaders pause when offscreen and on tab hide
+- Proper heading hierarchy (single `<h1>` per page)
+- WCAG 2.1 AA contrast compliance in both themes
+
+## Performance
+
+- WebGL context cleanup on unmount via `WEBGL_lose_context`
+- Single mount-once shader effect; uniforms updated via refs
+- Shaders pause when offscreen (`IntersectionObserver`) and on tab hide (`visibilitychange`)
+- DPR capped to keep shading cost bounded on retina displays
+- Page-backdrop fade is baked into the fragment shader (single opaque draw, no mask layers)
+- Matter.js is dynamic-imported inside the stack section
+- Lenis smooth scroll runs on a single rAF loop
+- Edge-compatible runtime
+
+## Notes
+
+- The `next.config.ts` `images.remotePatterns` allows `images.unsplash.com` and `cdn.dribbble.com` for the polaroid and project mockups respectively.
+- The portfolio uses a single `@/` path alias.
+- The project image cards use a disclaimer comment at the top of `components/projects/projects.tsx` noting that dribbble mockups are placeholders to be replaced with your own work.
+
+## License
+
+This template is free to use in personal and commercial projects. You may not resell or redistribute the template itself.

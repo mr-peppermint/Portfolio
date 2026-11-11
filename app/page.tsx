@@ -1,39 +1,23 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Ticker from "@/components/Ticker";
-import About from "@/components/About";
-import Work from "@/components/Work";
-import Achievements from "@/components/Achievements";
-import Certificates from "@/components/Certificates";
-import GithubSection from "@/components/GithubSection";
-import CodeforcesSection from "@/components/CodeforcesSection";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
+import { ContactCard } from "@/components/contact/contact-card";
+import { Hero } from "@/components/hero/hero";
+import { Projects } from "@/components/projects/projects";
+import { createMetadata, siteConfig } from "@/lib/metadata";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
 
-export default function Page() {
+export const metadata: Metadata = createMetadata({
+  title: "Home",
+  description: `Welcome to ${siteConfig.name}. ${siteConfig.description}`,
+  path: "/",
+});
+
+export default function HomePage(): ReactNode {
   return (
-    <>
-      <Navbar />
-      <main id="main">
-        <Hero />
-        <Ticker />
-        <About />
-        <Work />
-        <Achievements />
-        <Certificates />
-        <GithubSection />
-        <CodeforcesSection />
-        <Contact />
-      </main>
-
-      <Footer />
-
-      <noscript>
-        <p className="noscript">
-          This portfolio uses JavaScript for the particle intro and GitHub feed. Everything essential
-          still reads without it.
-        </p>
-      </noscript>
-    </>
+    <main id="main-content" className="flex flex-1 flex-col gap-20 sm:gap-28">
+      <Hero />
+      <Projects withHeadline viewMoreVisible />
+      <ContactCard />
+      <div className="h-12 sm:h-16" />
+    </main>
   );
 }
