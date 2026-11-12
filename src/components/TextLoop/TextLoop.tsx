@@ -34,6 +34,7 @@ export interface TextLoopProps {
   scrollBoost?: number;
   outline?: boolean;
   outlineWidth?: number;
+  viewHeight?: number;
   className?: string;
   style?: CSSProperties;
 }
@@ -68,10 +69,11 @@ const wrap = (v: number, length: number) => ((v % length) + length) % length;
 const circleRadius = (curviness: number, ribbonWidth: number) =>
   Math.min(90 + Math.max(0, curviness) * 0.95, Math.max(20, CY - Math.max(0, ribbonWidth) / 2 - EDGE_PAD));
 
-const buildPath = (shape: TextLoopShape, curviness: number, ribbonWidth: number, mirrored = false): string => {
+const buildPath = (shape: TextLoopShape, curviness: number, ribbonWidth: number, mirrored = false, customCY = CY): string => {
   const c = Math.max(0, curviness);
-  const room = Math.max(20, CY - Math.max(0, ribbonWidth) / 2 - EDGE_PAD);
+  const room = Math.max(20, customCY - Math.max(0, ribbonWidth) / 2 - EDGE_PAD);
   const flip = mirrored ? -1 : 1;
+  const currCY = customCY;
 
   switch (shape) {
     case 'circle': {
@@ -79,32 +81,32 @@ const buildPath = (shape: TextLoopShape, curviness: number, ribbonWidth: number,
       if (mirrored) {
         const rx = r * 1.22;
         const ry = r * 0.42;
-        return `M ${CX - rx} ${CY} A ${rx} ${ry} 0 1 1 ${CX + rx} ${CY} A ${rx} ${ry} 0 1 1 ${CX - rx} ${CY} Z`;
+        return `M ${CX - rx} ${currCY} A ${rx} ${ry} 0 1 1 ${CX + rx} ${currCY} A ${rx} ${ry} 0 1 1 ${CX - rx} ${currCY} Z`;
       }
-      return `M ${CX - r} ${CY} A ${r} ${r} 0 1 1 ${CX + r} ${CY} A ${r} ${r} 0 1 1 ${CX - r} ${CY} Z`;
+      return `M ${CX - r} ${currCY} A ${r} ${r} 0 1 1 ${CX + r} ${currCY} A ${r} ${r} 0 1 1 ${CX - r} ${currCY} Z`;
     }
     case 'infinity': {
       const r = 150 + c * 1.4;
       const h = Math.min(60 + c * 0.95, room);
       return [
-        `M ${CX} ${CY}`,
-        `C ${CX + r * 0.55} ${CY - h} ${CX + r} ${CY - h} ${CX + r} ${CY}`,
-        `C ${CX + r} ${CY + h} ${CX + r * 0.55} ${CY + h} ${CX} ${CY}`,
-        `C ${CX - r * 0.55} ${CY - h} ${CX - r} ${CY - h} ${CX - r} ${CY}`,
-        `C ${CX - r} ${CY + h} ${CX - r * 0.55} ${CY + h} ${CX} ${CY}`,
+        `M ${CX} ${currCY}`,
+        `C ${CX + r * 0.55} ${currCY - h} ${CX + r} ${currCY - h} ${CX + r} ${currCY}`,
+        `C ${CX + r} ${currCY + h} ${CX + r * 0.55} ${currCY + h} ${CX} ${currCY}`,
+        `C ${CX - r * 0.55} ${currCY - h} ${CX - r} ${currCY - h} ${CX - r} ${currCY}`,
+        `C ${CX - r} ${currCY + h} ${CX - r * 0.55} ${currCY + h} ${CX} ${currCY}`,
         'Z'
       ].join(' ');
     }
     case 'arch': {
       const rise = Math.min(120 + c * 1.1, room * 2) * flip;
-      return `M 120 ${CY + rise / 2} Q ${CX} ${CY - rise * 1.5} ${VIEW_W - 120} ${CY + rise / 2}`;
+      return `M 120 ${currCY + rise / 2} Q ${CX} ${currCY - rise * 1.5} ${VIEW_W - 120} ${currCY + rise / 2}`;
     }
     case 'line':
-      return `M -320 ${CY} L ${VIEW_W + 320} ${CY}`;
+      return `M -320 ${currCY} L ${VIEW_W + 320} ${currCY}`;
     case 'wave':
     default: {
       const a = Math.min(c * 2.2, room * 2) * flip;
-      return `M -320 ${CY} Q -160 ${CY - a} 0 ${CY} T 320 ${CY} T 640 ${CY} T 960 ${CY} T 1280 ${CY} T ${VIEW_W + 320} ${CY}`;
+      return `M -320 ${currCY} Q -160 ${currCY - a} 0 ${currCY} T 320 ${currCY} T 640 ${currCY} T 960 ${currCY} T 1280 ${currCY} T ${VIEW_W + 320} ${currCY}`;
     }
   }
 };
@@ -179,6 +181,7 @@ const TextLoop = ({
   scrollBoost = 0,
   outline = false,
   outlineWidth = 1.5,
+  viewHeight,
   className = '',
   style = {}
 }: TextLoopProps) => {
@@ -193,6 +196,9 @@ const TextLoop = ({
   const crossTailRef = useRef<SVGTextPathElement | null>(null);
   const progressRef = useRef(0);
 
+  const effViewH = viewHeight ?? (shape === 'line' ? Math.max(48, Math.round((ribbonWidth || 34) * 1.5)) : VIEW_H);
+  const effCY = effViewH / 2;
+
   const [metrics, setMetrics] = useState<Metrics>({ length: 0, reps: 1, crossLength: 0, crossReps: 1 });
 
   const rawId = useId();
@@ -204,20 +210,20 @@ const TextLoop = ({
   const underId = `${pathId}-under`;
 
   const custom = Boolean(path);
-  const d = useMemo(() => path || buildPath(shape, curviness, ribbonWidth), [path, shape, curviness, ribbonWidth]);
+  const d = useMemo(() => path || buildPath(shape, curviness, ribbonWidth, false, effCY), [path, shape, curviness, ribbonWidth, effCY]);
   const crossD = useMemo(() => {
     if (!cross) return '';
     if (path) return path;
-    return buildPath(shape, curviness, ribbonWidth, shape === 'wave' || shape === 'arch' || shape === 'circle');
-  }, [cross, path, shape, curviness, ribbonWidth]);
+    return buildPath(shape, curviness, ribbonWidth, shape === 'wave' || shape === 'arch' || shape === 'circle', effCY);
+  }, [cross, path, shape, curviness, ribbonWidth, effCY]);
   const fade = useMemo(() => buildFade(edgeFade), [edgeFade]);
   const fill = color || (ribbon ? '#ffffff' : 'currentColor');
 
   const half = cross ? crossAngle / 2 : 0;
   const mainAngle = tilt + half;
   const crossAngleDeg = tilt - half;
-  const mainTransform = mainAngle ? `rotate(${mainAngle} ${CX} ${CY})` : undefined;
-  const crossTransform = crossAngleDeg ? `rotate(${crossAngleDeg} ${CX} ${CY})` : undefined;
+  const mainTransform = mainAngle ? `rotate(${mainAngle} ${CX} ${effCY})` : undefined;
+  const crossTransform = crossAngleDeg ? `rotate(${crossAngleDeg} ${CX} ${effCY})` : undefined;
   const crossTape = crossColor || tint(ribbonColor, 0.62);
   const crossFill = ribbon ? inkOn(crossTape) : crossColor || 'currentColor';
   const crossDim = !ribbon && !crossColor ? 0.45 : 1;
@@ -504,7 +510,7 @@ const TextLoop = ({
       <svg
         ref={svgRef}
         className="text-loop-svg"
-        viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+        viewBox={`0 0 ${VIEW_W} ${effViewH}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label={text}
@@ -518,8 +524,8 @@ const TextLoop = ({
             </linearGradient>
           )}
           {fade.length > 0 && (
-            <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width={VIEW_W} height={VIEW_H}>
-              <rect width={VIEW_W} height={VIEW_H} fill={`url(#${fadeId})`} />
+            <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width={VIEW_W} height={effViewH}>
+              <rect width={VIEW_W} height={effViewH} fill={`url(#${fadeId})`} />
             </mask>
           )}
           {cross && ribbon && (

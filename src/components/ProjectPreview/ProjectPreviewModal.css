@@ -473,3 +473,72 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Light Theme Overrides (Warm Cream) */
+[data-theme="light"] .preview-modal {
+  background: #fdfbf7;
+  border: 1px solid rgba(68, 64, 60, 0.2);
+  box-shadow: 0 32px 80px rgba(68, 64, 60, 0.25);
+  color: #1c1917;
+}
+
+[data-theme="light"] .preview-window-bar {
+  background: rgba(68, 64, 60, 0.05);
+  border-bottom: 1px solid rgba(68, 64, 60, 0.12);
+  color: #1c1917;
+}
+
+[data-theme="light"] .preview-window-close {
+  border-color: rgba(68, 64, 60, 0.25);
+  color: #1c1917;
+}
+
+[data-theme="light"] .preview-title {
+  color: #1c1917;
+}
+
+[data-theme="light"] .preview-tech-chip {
+  background: rgba(68, 64, 60, 0.05);
+  border-color: rgba(68, 64, 60, 0.15);
+  color: #1c1917;
+}
+
+[data-theme="light"] .preview-section {
+  border-top-color: rgba(68, 64, 60, 0.1);
+}
+
+[data-theme="light"] .preview-section-title {
+  color: #1c1917;
+}
+
+[data-theme="light"] .preview-desc,
+[data-theme="light"] .preview-feature-item {
+  color: #57534e;
+}
+
+[data-theme="light"] .preview-feature-item strong {
+  color: #1c1917;
+}
+
+[data-theme="light"] .preview-highlight-box {
+  background: rgba(68, 64, 60, 0.04);
+  border-color: rgba(68, 64, 60, 0.12);
+}
+
+[data-theme="light"] .preview-highlight-text {
+  color: #1c1917;
+}
+
+[data-theme="light"] .preview-footer {
+  background: rgba(68, 64, 60, 0.04);
+  border-top-color: rgba(68, 64, 60, 0.1);
+}
+
+[data-theme="light"] .readme-terminal-box {
+  background: #ede6d8;
+  border-color: rgba(68, 64, 60, 0.1);
+}
+
+[data-theme="light"] .readme-terminal-box pre {
+  color: #44403c;
+}

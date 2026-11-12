@@ -32,6 +32,13 @@ export interface ProjectItem extends ChromaItem {
   };
 }
 
+export interface MilestoneItem {
+  year: string;
+  title: string;
+  detail: string;
+  tag: 'Project' | 'Certification' | 'Hackathon' | 'Competitive';
+}
+
 export interface ProfileConfig {
   name: string;
   lines: string[];
@@ -50,6 +57,7 @@ export interface ProfileConfig {
   skills: string[];
   projects: ProjectItem[];
   certificates: CertificateItem[];
+  milestones: MilestoneItem[];
 }
 
 export const profile: ProfileConfig = {
@@ -65,8 +73,10 @@ export const profile: ProfileConfig = {
   codeforcesUrl: 'https://codeforces.com/profile/Dexter.1',
   loopText: 'Dixit Dahiya ✦ Creative Developer ✦ Competitive Programmer ✦ Open Source',
   nav: [
-    { label: 'Projects', href: '#projects' },
+    { label: 'About', href: '#about' },
+    { label: 'Education', href: '#education' },
     { label: 'Credentials', href: '#certificates' },
+    { label: 'Projects', href: '#projects' },
     { label: 'Codeforces', href: '#codeforces' },
     { label: 'Contact', href: '#contact' }
   ],
@@ -127,13 +137,13 @@ export const profile: ProfileConfig = {
       liveUrl: 'https://github.com/mr-peppermint/Portfolio',
       alt: 'Portfolio Repository',
       readmeDescription:
-        'Tactile single-page monochrome portfolio built with Vite, React 18, and TypeScript. Features full-screen stippled Creation-of-Adam Michelangelo dithered hands meeting behind a transparent retro PROJECT .EXE terminal, interactive Codeforces and GitHub contribution trackers, and ChromaGrid spotlight showcase.',
+        'Tactile single-page portfolio built with Vite, React 18, and TypeScript. Features dynamic Michelangelo dithered hands that touch on user interaction to illuminate warm cream mode, interactive Codeforces and GitHub trackers, disassembling vector particle portrait, and ChromaGrid showcase.',
       aiSummary: {
         overview:
-          'A hyper-crafted personal portfolio engineered around high-DPI canvas stippling, 1-bit retro dither aesthetics, and tactile user feedback. Replaces generic web templates with bespoke canvas physics and terminal shaders.',
+          'A hyper-crafted personal portfolio engineered around high-DPI canvas stippling, tactile user feedback, and organic hand physics. Replaces generic web templates with bespoke canvas physics and tactile theme transitions.',
         features: [
-          'Edge-to-edge canvas renderer drawing 75,000+ individual dither points at Retina DPR',
-          'Floating transparent PROJECT .EXE terminal locked to the meeting point of the hands',
+          'Edge-to-edge canvas renderer drawing Michelangelo dithered hands with individual organic dynamics',
+          'Interactive contact physics button making hands touch and illuminating warm cream mode',
           'React Bits ChromaGrid integration with soft cursor spotlight and glowing borders',
           'Live Codeforces contest ratings and GitHub 53-week contribution calendar integrations'
         ],
@@ -281,6 +291,65 @@ export const profile: ProfileConfig = {
       description:
         'A 36 Hours Non-stop hackathon based on the theme of societal development for building real-life applicable prototypes with React and Figma.',
       skills: ['React', 'UI', 'HTML', 'CSS', 'UX', 'Git']
+    },
+    {
+      title: 'Meta Front-End Developer',
+      issuer: 'Meta',
+      year: '2024',
+      date: 'June 2024',
+      description:
+        'Professional certificate covering React component hierarchies, UX principles, responsive CSS grid/flexbox, state management, and Git workflows.',
+      skills: ['React', 'JavaScript', 'HTML/CSS', 'UI/UX', 'Version Control']
+    },
+    {
+      title: 'AWS Cloud Practitioner',
+      issuer: 'Amazon Web Services',
+      year: '2024',
+      date: 'August 2024',
+      description:
+        'Foundational AWS cloud architecture covering IAM permissions, ECS/Lambda serverless execution, S3 object storage, and VPC network configuration.',
+      skills: ['AWS', 'Cloud Architecture', 'Serverless', 'Security']
+    },
+    {
+      title: 'Google UX Design',
+      issuer: 'Google',
+      year: '2023',
+      date: 'December 2023',
+      description:
+        'End-to-end design thinking: user journey mapping, low/high-fidelity Figma wireframing, heuristic usability testing, and accessibility WCAG standards.',
+      skills: ['Figma', 'UX Research', 'Design Systems', 'Prototyping']
+    }
+  ],
+  milestones: [
+    {
+      year: '2026',
+      title: 'TerraGuard Platform Launch',
+      detail: 'Engineered satellite forest-canopy loss detection platform with Google Earth Engine, FastAPI tile caching, and MapLibre GL.',
+      tag: 'Project'
+    },
+    {
+      year: '2026',
+      title: 'Tactile Portfolio v2',
+      detail: 'Engineered tactile portfolio featuring dynamic Michelangelo hands with contact physics, warm cream mode illumination, disassembling vector portrait, and live Codeforces telemetry.',
+      tag: 'Project'
+    },
+    {
+      year: '2026',
+      title: 'Newton School Hackathon Winner',
+      detail: 'Rapid prototype game engine implementation in 3-hour speedrun format under Space thematic requirements.',
+      tag: 'Hackathon'
+    },
+    {
+      year: '2025',
+      title: 'Codeforces Active Competitor',
+      detail: 'Achieved verified rating milestones and solved 400+ problems across dynamic programming, graph algorithms, and number theory.',
+      tag: 'Competitive'
+    },
+    {
+      year: '2024',
+      title: 'HyperNexis 36hr Hackathon',
+      detail: 'Shipped interactive prototype for societal impact under 36-hour non-stop sprint conditions using React and Figma.',
+      tag: 'Hackathon'
     }
   ]
 };

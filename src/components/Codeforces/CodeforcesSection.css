@@ -228,6 +228,42 @@
   font-size: 13px;
 }
 
+/* Light Theme Overrides */
+[data-theme="light"] .section-cf {
+  border-top-color: var(--card-border);
+}
+
+[data-theme="light"] .cf-card,
+[data-theme="light"] .cf-contests-panel {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  box-shadow: 0 12px 32px rgba(68, 64, 60, 0.08);
+}
+
+[data-theme="light"] .cf-link {
+  color: var(--ink);
+}
+
+[data-theme="light"] .cf-username {
+  color: var(--ink);
+}
+
+[data-theme="light"] .cf-stat-val {
+  color: var(--ink);
+}
+
+[data-theme="light"] .cf-contest-item {
+  border-bottom-color: var(--card-border);
+}
+
+[data-theme="light"] .cf-contest-name {
+  color: var(--ink);
+}
+
+[data-theme="light"] .cf-c-new {
+  color: var(--ink);
+}
+
 @media (max-width: 768px) {
   .cf-container {
     grid-template-columns: 1fr;

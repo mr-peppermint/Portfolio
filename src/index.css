@@ -1,11 +1,54 @@
-:root {
-  --void: #000000;
+:root,
+[data-theme="dark"] {
+  --void: #060608;
+  --void-subtle: #0f0f14;
   --ink: #ffffff;
   --chrome: #c0c0c0;
-  --dim: #8c8c8c;
+  --dim: #8c8c94;
+  --card-bg: rgba(14, 14, 18, 0.85);
+  --card-border: rgba(255, 255, 255, 0.12);
+  --card-border-hover: rgba(255, 255, 255, 0.35);
+  --surface: #101014;
+  --surface-alt: #16161c;
+  --accent: #38bdf8;
   --mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, #root { background: var(--void); color: var(--ink); }
-body { font-family: var(--mono); -webkit-font-smoothing: antialiased; }
-a { color: inherit; text-decoration: none; }
+
+[data-theme="light"] {
+  /* Warm cream aesthetic — not stark white */
+  --void: #f6f3eb;
+  --void-subtle: #ede8dc;
+  --surface: #fdfbf7;
+  --surface-alt: #eae3d2;
+  --ink: #1c1917;
+  --chrome: #57534e;
+  --dim: #78716c;
+  --card-bg: rgba(253, 251, 247, 0.92);
+  --card-border: rgba(68, 64, 60, 0.14);
+  --card-border-hover: rgba(68, 64, 60, 0.35);
+  --accent: #b45309;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  background: var(--void);
+  color: var(--ink);
+  transition: background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.45s ease;
+}
+
+body {
+  font-family: var(--mono);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
