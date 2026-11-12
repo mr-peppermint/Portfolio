@@ -41,8 +41,15 @@ const Hero = () => {
   const size = Math.round(Math.max(38, Math.min(w * 0.065, h * 0.09, 82)));
   const boxW = size * 4.6;
 
-  // Resolution detection: 4K only on displays that benefit from it, 1080p for standard/mobile
-  const [videoSrc, setVideoSrc] = useState<string>('/videos/portfolio-flower-hero-1080p-loop.mp4');
+  // Use browser-compatible H.264 encodes, with 4K only on displays that benefit from it.
+  const [videoSrc] = useState(() => {
+    if (typeof window === 'undefined') return '/videos/portfolio-flower-hero-1080p-compatible.mp4';
+
+    const isUltraHighRes = window.innerWidth >= 2560 || (window.innerWidth >= 1920 && (window.devicePixelRatio || 1) >= 2);
+    return isUltraHighRes
+      ? '/videos/portfolio-flower-hero-4k-compatible.mp4'
+      : '/videos/portfolio-flower-hero-1080p-compatible.mp4';
+  });
 
   // Motion preference and playback state
   const [isPlaying, setIsPlaying] = useState<boolean>(() => {
@@ -51,16 +58,6 @@ const Hero = () => {
     }
     return true;
   });
-
-  useEffect(() => {
-    // Choose video source once based on viewport / device pixel ratio
-    if (typeof window !== 'undefined') {
-      const isUltraHighRes = window.innerWidth >= 2560 || (window.innerWidth >= 1920 && (window.devicePixelRatio || 1) >= 2);
-      if (isUltraHighRes) {
-        setVideoSrc('/videos/portfolio-flower-hero-4k-loop.mp4');
-      }
-    }
-  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
