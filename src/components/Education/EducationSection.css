@@ -30,6 +30,15 @@
   line-height: 1.1;
 }
 
+.edu-title p {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .edu-desc {
   max-width: 65ch;
   font-size: clamp(14px, 1.2vw, 16px);

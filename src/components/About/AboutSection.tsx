@@ -1,21 +1,42 @@
-import { useRef } from 'react';
-import ParticlePortrait from './ParticlePortrait';
+import ProfileCard from '../ProfileCard/ProfileCard';
+import BlurText from '../BlurText/BlurText';
+import GradualBlur from '../GradualBlur/GradualBlur';
 import { profile } from '../../config';
 import './AboutSection.css';
 
 export const AboutSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-
   return (
-    <section id="about" className="about-section" ref={sectionRef}>
+    <section id="about" className="about-section">
       <div className="about-inner">
         {/* Left Side: Details & Biography */}
         <div className="about-content">
           <div className="about-tag">// 01 / PROFILE &amp; BIOGRAPHY</div>
-          <h2 className="about-title">
-            Architecting high-velocity
-            <br />
-            <em>tactile interfaces</em>.
+          <h2 className="about-title" aria-label="Architecting high-velocity tactile interfaces.">
+            <BlurText
+              text="Architecting high-velocity"
+              effect="blur"
+              animateBy="words"
+              direction="top"
+              staggerFrom="start"
+              trigger="view"
+              delay={120}
+              stepDuration={0.38}
+              blur={12}
+              distance={40}
+            />
+            <BlurText
+              text="tactile interfaces."
+              effect="blur"
+              animateBy="words"
+              direction="top"
+              staggerFrom="start"
+              trigger="view"
+              delay={150}
+              stepDuration={0.4}
+              blur={12}
+              distance={40}
+              className="about-title-em"
+            />
           </h2>
 
           <div className="about-text">
@@ -67,11 +88,43 @@ export const AboutSection = () => {
           </div>
         </div>
 
-        {/* Right Side: Interactive Vector Particle Portrait (Disassembles on scroll down) */}
+        {/* Right Side: React Bits ProfileCard */}
         <div className="about-portrait-wrap">
-          <ParticlePortrait initialSrc="/portrait-hd.png" containerRef={sectionRef} />
+          <ProfileCard
+            avatarUrl="/portrait-hd.png"
+            name={profile.name}
+            title={profile.role}
+            handle="mr-peppermint"
+            status="Open to opportunities"
+            contactText="Contact"
+            holo={0.8}
+            glare={0.5}
+            tiltStrength={12}
+            parallax={8}
+            radius={16}
+            enableTilt={true}
+            intro={true}
+            showUserInfo={true}
+            enableMobileTilt={false}
+            theme="dark"
+            onContactClick={() => {
+              window.location.href = `mailto:${profile.email}`;
+            }}
+          />
         </div>
       </div>
+
+      {/* Bottom edge blur — fades into Education section */}
+      <GradualBlur
+        position="bottom"
+        height="5rem"
+        strength={2}
+        layers={8}
+        curve="ease-out"
+        exponential
+        tint="rgba(6,6,8,0.35)"
+        zIndex={2}
+      />
     </section>
   );
 };

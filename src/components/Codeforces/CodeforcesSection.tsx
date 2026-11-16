@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { profile } from '../../config';
+import BlurText from '../BlurText/BlurText';
 import './CodeforcesSection.css';
 
 interface CfProfile {
@@ -114,7 +115,20 @@ export default function CodeforcesSection() {
     <section className="section-cf" id="codeforces">
       <div className="cf-head">
         <div className="cf-tag">// COMPETITIVE PROGRAMMING</div>
-        <h2 className="cf-title">SOLVING IN PUBLIC</h2>
+        <h2 className="cf-title">
+          <BlurText
+            text="SOLVING IN PUBLIC"
+            effect="blur"
+            animateBy="words"
+            direction="top"
+            staggerFrom="start"
+            trigger="view"
+            delay={130}
+            stepDuration={0.38}
+            blur={12}
+            distance={40}
+          />
+        </h2>
         <p className="cf-desc">
           Live statistics, contest history, and rating from{' '}
           <a

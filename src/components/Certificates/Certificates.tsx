@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { profile, CertificateItem } from '../../config';
+import BlurText from '../BlurText/BlurText';
 import './Certificates.css';
 
 function issuerMark(issuer: string): string {
@@ -29,7 +30,20 @@ export default function CertificatesSection() {
     <section className="section-certs" id="certificates">
       <div className="certs-head">
         <div className="certs-tag">// 03 / CREDENTIALS &amp; ACHIEVEMENTS</div>
-        <h2 className="certs-title">PROOF OF PRACTICE &amp; MILESTONES</h2>
+        <h2 className="certs-title">
+          <BlurText
+            text="PROOF OF PRACTICE & MILESTONES"
+            effect="blur"
+            animateBy="words"
+            direction="top"
+            staggerFrom="start"
+            trigger="view"
+            delay={110}
+            stepDuration={0.38}
+            blur={12}
+            distance={40}
+          />
+        </h2>
         <p className="certs-desc">
           Hackathons, accredited technical certifications, and engineering milestones — verified accomplishments in creative engineering and algorithms.
         </p>

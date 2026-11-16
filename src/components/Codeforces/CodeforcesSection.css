@@ -29,6 +29,15 @@
   line-height: 1.1;
 }
 
+.cf-title p {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .cf-desc {
   max-width: 60ch;
   font-size: clamp(14px, 1.2vw, 16px);
