@@ -4,10 +4,12 @@ import TextLoop from './TextLoop/TextLoop';
 import AboutSection from './About/AboutSection';
 import EducationSection from './Education/EducationSection';
 import CertificatesSection from './Certificates/Certificates';
-import ChromaGrid from './ChromaGrid/ChromaGrid';
 import GithubContributionGraph from './Github/GithubContributionGraph';
 import CodeforcesSection from './Codeforces/CodeforcesSection';
 import ProjectPreviewModal from './ProjectPreview/ProjectPreviewModal';
+import BlurText from './BlurText/BlurText';
+import GlareHover from './GlareHover/GlareHover';
+import GradualBlur from './GradualBlur/GradualBlur';
 import { useTheme } from '../context/ThemeContext';
 import { profile, ProjectItem } from '../config';
 import './Hero.css';
@@ -247,6 +249,17 @@ const Hero = () => {
             </button>
           </div>
         </div>
+        {/* GradualBlur at hero bottom — fades into the text loop strip */}
+        <GradualBlur
+          position="bottom"
+          height="8rem"
+          strength={3}
+          layers={10}
+          curve="ease-in-out"
+          exponential
+          tint={theme === 'dark' ? 'rgba(6,6,8,0.55)' : 'rgba(246,243,235,0.55)'}
+          zIndex={5}
+        />
       </section>
 
       {/* 2. COMPACT LOOPED TEXT STRIP */}
@@ -280,7 +293,20 @@ const Hero = () => {
       <section id="projects" className="projects-section">
         <div className="projects-header">
           <div className="projects-tag">// 04 / OPEN SOURCE &amp; REPOSITORIES</div>
-          <h2 className="projects-title">BUILT IN PUBLIC</h2>
+          <h2 className="projects-title">
+            <BlurText
+              text="BUILT IN PUBLIC"
+              effect="blur"
+              animateBy="words"
+              direction="top"
+              staggerFrom="start"
+              trigger="view"
+              delay={140}
+              stepDuration={0.4}
+              blur={12}
+              distance={40}
+            />
+          </h2>
           <p className="projects-desc">
             All original repositories authored by {profile.name} (@{profile.githubUsername}). Select any project card to open its GPT-OSS 120B AI architectural breakdown, synthesized directly from the README.
           </p>
@@ -289,25 +315,62 @@ const Hero = () => {
         {/* GitHub Contribution Graph */}
         <GithubContributionGraph />
 
-        {/* ChromaGrid showing all original repositories with preview trigger */}
+        {/* GlareHover project cards replacing ChromaGrid */}
         <div className="projects-grid-wrap">
-          <ChromaGrid
-            items={profile.projects}
-            columns={3}
-            radius={280}
-            gap={16}
-            minCardWidth={240}
-            aspectRatio="16 / 10"
-            cardRadius={18}
-            softness={0.65}
-            damping={0.4}
-            glow={0.55}
-            borderGlow={1}
-            reveal="spotlight"
-            theme={theme}
-            frame={true}
-            onItemClick={item => setSelectedProject(item as ProjectItem)}
-          />
+          <div className="glare-projects-grid">
+            {profile.projects.map((project) => (
+              <button
+                key={project.title}
+                type="button"
+                className="glare-project-btn"
+                onClick={() => setSelectedProject(project as ProjectItem)}
+                aria-label={`View ${project.title}`}
+              >
+                <GlareHover
+                  width="100%"
+                  height="100%"
+                  borderRadius="18px"
+                  borderColor={`${project.accent}44`}
+                  mode="hover"
+                  variant="twin"
+                  glareColor={project.accent}
+                  glareOpacity={0.55}
+                  glareSize={32}
+                  softness={0.65}
+                  glareAngle={-40}
+                  blendMode="screen"
+                  rimGlint={true}
+                  transitionDuration={600}
+                  intro={true}
+                  className="glare-project-card"
+                >
+                  {/* Background image */}
+                  <img
+                    src={project.image}
+                    alt={project.alt ?? project.title}
+                    className="glare-project-img"
+                    loading="lazy"
+                    draggable={false}
+                  />
+
+                  {/* Dark scrim for readability */}
+                  <span className="glare-project-scrim" />
+
+                  {/* Accent top-border line */}
+                  <span className="glare-project-accent-line" style={{ background: project.accent }} />
+
+                  {/* Content overlay */}
+                  <div className="glare-project-content">
+                    <span className="glare-project-title">{project.title}</span>
+                    <span className="glare-project-subtitle">{project.subtitle}</span>
+                    <span className="glare-project-cta">
+                      VIEW PROJECT <span className="glare-project-arrow">↗</span>
+                    </span>
+                  </div>
+                </GlareHover>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="projects-footer">
@@ -321,6 +384,18 @@ const Hero = () => {
             <span className="cta-arrow">→</span>
           </a>
         </div>
+
+        {/* Bottom edge blur — fades into Codeforces section */}
+        <GradualBlur
+          position="bottom"
+          height="5rem"
+          strength={2}
+          layers={8}
+          curve="ease-out"
+          exponential
+          tint={theme === 'dark' ? 'rgba(6,6,8,0.4)' : 'rgba(246,243,235,0.4)'}
+          zIndex={2}
+        />
       </section>
 
       {/* 7. CODEFORCES STATS SECTION */}
@@ -330,10 +405,32 @@ const Hero = () => {
       <section className="contact-section" id="contact">
         <div className="contact-inner">
           <p className="contact-tag">// 06 / GET IN TOUCH</p>
-          <h2 className="contact-title">
-            Let&apos;s build something
-            <br />
-            <em>tactile</em>.
+          <h2 className="contact-title" aria-label="Let's build something tactile.">
+            <BlurText
+              text="Let's build something"
+              effect="blur"
+              animateBy="words"
+              direction="top"
+              staggerFrom="start"
+              trigger="view"
+              delay={120}
+              stepDuration={0.38}
+              blur={12}
+              distance={40}
+            />
+            <BlurText
+              text="tactile."
+              effect="blur"
+              animateBy="words"
+              direction="top"
+              staggerFrom="start"
+              trigger="view"
+              delay={150}
+              stepDuration={0.4}
+              blur={12}
+              distance={40}
+              className="contact-title-em"
+            />
           </h2>
           <p className="contact-desc">
             Interested in collaboration, creative engineering, or competitive programming discussions? Drop a message.
@@ -360,6 +457,18 @@ const Hero = () => {
             ))}
           </ul>
         </div>
+
+        {/* Top edge blur — softens entry from Codeforces section */}
+        <GradualBlur
+          position="top"
+          height="4rem"
+          strength={1.5}
+          layers={8}
+          curve="ease-out"
+          exponential
+          tint={theme === 'dark' ? 'rgba(6,6,8,0.3)' : 'rgba(246,243,235,0.3)'}
+          zIndex={2}
+        />
       </section>
 
       {/* 9. SITE FOOTER */}

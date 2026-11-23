@@ -37,6 +37,26 @@
   line-height: 1.15;
 }
 
+/* BlurText <p> inside heading */
+.about-title p {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Italic/accent second BlurText line */
+.about-title-em {
+  font-style: italic;
+  color: #38bdf8;
+}
+
+[data-theme="light"] .about-title-em {
+  color: #0284c7;
+}
+
 .about-title em {
   font-style: italic;
   color: #38bdf8;

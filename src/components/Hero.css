@@ -428,6 +428,17 @@
   line-height: 1.1;
 }
 
+/* BlurText <p> inside heading — reset margins */
+.projects-title p,
+.contact-title p {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .projects-desc {
   max-width: 60ch;
   font-size: clamp(14px, 1.2vw, 16px);
@@ -438,6 +449,162 @@
 .projects-grid-wrap {
   width: 100%;
   margin-top: clamp(24px, 4vh, 40px);
+}
+
+/* ── GlareHover project grid ── */
+.glare-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+@media (max-width: 900px) {
+  .glare-projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .glare-projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Full-width, full-height clickable button wrapper */
+.glare-project-btn {
+  all: unset;
+  display: block;
+  cursor: pointer;
+  width: 100%;
+  /* 16:10 aspect ratio */
+  aspect-ratio: 16 / 10;
+  border-radius: 18px;
+  transition: transform 0.22s cubic-bezier(0.33, 1, 0.68, 1),
+              box-shadow 0.22s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.glare-project-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.55);
+}
+
+.glare-project-btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* GlareHover fills its button container */
+.glare-project-card {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Cover image */
+.glare-project-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.5s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.glare-project-btn:hover .glare-project-img {
+  transform: scale(1.04);
+}
+
+/* Gradient scrim — bottom-heavy for text legibility */
+.glare-project-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.55) 30%,
+    rgba(0, 0, 0, 0.18) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Thin accent line along the top edge */
+.glare-project-accent-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.2s ease;
+}
+
+.glare-project-btn:hover .glare-project-accent-line {
+  opacity: 1;
+}
+
+/* Text overlay pinned to bottom-left */
+.glare-project-content {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.glare-project-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(15px, 1.4vw, 18px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.glare-project-subtitle {
+  font-family: var(--mono, monospace);
+  font-size: clamp(10px, 0.85vw, 11.5px);
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.glare-project-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  font-family: var(--mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.2s ease;
+}
+
+.glare-project-btn:hover .glare-project-cta {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.glare-project-arrow {
+  transition: transform 0.2s ease;
+}
+
+.glare-project-btn:hover .glare-project-arrow {
+  transform: translate(2px, -2px);
 }
 
 .projects-footer {
@@ -511,6 +678,17 @@
   letter-spacing: -0.025em;
   color: var(--ink);
   margin-bottom: 16px;
+}
+
+/* Italic/accent second line of contact heading */
+.contact-title-em {
+  font-style: italic;
+  font-weight: 400;
+  color: #38bdf8;
+}
+
+[data-theme="light"] .contact-title-em {
+  color: #b45309;
 }
 
 .contact-title em {

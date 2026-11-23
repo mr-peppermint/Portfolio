@@ -1,3 +1,4 @@
+import BlurText from '../BlurText/BlurText';
 import './EducationSection.css';
 
 interface EducationItem {
@@ -58,7 +59,20 @@ export const EducationSection = () => {
     <section id="education" className="education-section">
       <div className="edu-head">
         <div className="edu-tag">// 02 / ACADEMIC FOUNDATIONS</div>
-        <h2 className="edu-title">EDUCATION &amp; THEORY</h2>
+        <h2 className="edu-title">
+          <BlurText
+            text="EDUCATION & THEORY"
+            effect="blur"
+            animateBy="words"
+            direction="top"
+            staggerFrom="start"
+            trigger="view"
+            delay={120}
+            stepDuration={0.38}
+            blur={12}
+            distance={40}
+          />
+        </h2>
         <p className="edu-desc">
           Formal computer science curricula, algorithmic training, and systems engineering — built on deep mathematical and low-level computational foundations.
         </p>
